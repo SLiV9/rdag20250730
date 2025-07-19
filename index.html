@@ -8,24 +8,27 @@
 
 		<link rel="stylesheet" href="dist/reset.css">
 		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/black.css">
+		<link rel="stylesheet" href="bt-theme.css">
 
 		<!-- Theme used for syntax highlighted code -->
-		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+		<link rel="stylesheet" href="bt-highlight.css">
 	</head>
 	<body>
 		<div class="reveal">
 			<div class="slides">
 				<section>
-<h2 class="r-fit-text">Rust in High Frequency Trading</h2>
+<h2 class="r-fit-text">Rust <span class="mark">in High Frequency Trading</span></h2>
 
-<p align="right">Sander in 't Veld</p>
-<p align="right">Rust Meetup @ BlockTech</p>
 <p align="right">July 30, 2025</p>
+<p align="right">Sander in 't Veld</p>
+<p align="right">Rust Meetup <span class="mark">@ BlockTech</span></p>
 				</section>
+
+
 				<section>
-<pre><code data-line-numbers>
-pub trait Worker {
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">pub trait Worker {
+    vec: Vec<Greeks>,
     fn update(&mut self, id: Id, greeks: Greeks);
 
     fn total_delta(&self) -> Delta;
@@ -34,9 +37,80 @@ pub trait Worker {
     fn total_vega(&self) -> Vega;
     fn total_greeks(&self) -> Greeks;
 }
-
-</code></pre>
+</script></code></pre>
 				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">#[derive(Clone, Copy)]
+pub struct Greeks {
+    pub delta: Delta,
+    pub gamma: Gamma,
+    pub theta: Theta,
+    pub vega: Vega,
+    vegas: Vec<Vega>,
+}
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+pub struct Id(pub u32);
+
+#[derive(Clone, Copy, PartialEq, Add, AddAssign, Sum)]
+pub struct Delta(pub f32);
+
+#[derive(Clone, Copy, PartialEq, Add, AddAssign, Sum)]
+pub struct Gamma(pub f32);
+
+#[derive(Clone, Copy, PartialEq, Add, AddAssign, Sum)]
+pub struct Theta(pub f32);
+
+#[derive(Clone, Copy, PartialEq, Add, AddAssign, Sum)]
+pub struct Vega(pub f32);
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">impl Worker for Worker1 {
+    fn update(&mut self, id: Id, greeks: Greeks) {
+        if let Some(entry) =
+            self.greeks.iter_mut().find(|x| x.id == id)
+        {
+            entry.greeks = greeks;
+        } else {
+            self.greeks.push(InstrumentData { id, greeks });
+        }
+    }
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">	.p2align	4
+.LBB40_2:
+	vaddps ymm15, ymm15, ymmword ptr [rax]
+	vaddps ymm14, ymm14, ymmword ptr [rax + 32]
+	vaddps ymm13, ymm13, ymmword ptr [rax + 64]
+	vaddps ymm12, ymm12, ymmword ptr [rax + 96]
+; ...
+	vaddps ymm2, ymm2, ymmword ptr [rax + 416]
+	vaddps ymm1, ymm1, ymmword ptr [rax + 448]
+	vaddps ymm0, ymm0, ymmword ptr [rax + 480]
+	add rcx, -128
+	add rax, 512
+	cmp rcx, 127
+	ja .LBB40_2
+</script></code></pre>
+				</section>
+
+
 				<section>Slide 2</section>
 			</div>
 		</div>
