@@ -7,65 +7,65 @@ use crate::common::*;
 #[derive(Default)]
 pub struct Worker4 {
     instrument_offsets: FxHashMap<InstrumentId, usize>,
-    exposures: Vec<Exposures>,
+    greeks: Vec<Greeks>,
 }
 
 impl Worker for Worker4 {
-    fn update_exposure(
+    fn update(
         &mut self,
         instrument_id: InstrumentId,
-        delta_exposure: DeltaExposure,
-        gamma_exposure: GammaExposure,
-        theta_exposure: ThetaExposure,
-        vega_exposure: VegaExposure,
+        delta: Delta,
+        gamma: Gamma,
+        theta: Theta,
+        vega: Vega,
     ) {
-        let exposures = Exposures {
-            delta_exposure,
-            gamma_exposure,
-            theta_exposure,
-            vega_exposure,
+        let greeks = Greeks {
+            delta,
+            gamma,
+            theta,
+            vega,
         };
         match self.instrument_offsets.entry(instrument_id) {
             hash_map::Entry::Occupied(occupied_entry) => {
                 let offset = *occupied_entry.get();
-                self.exposures[offset] = exposures;
+                self.greeks[offset] = greeks;
             }
             hash_map::Entry::Vacant(vacant_entry) => {
-                let offset = self.exposures.len();
+                let offset = self.greeks.len();
                 vacant_entry.insert(offset);
-                self.exposures.push(exposures);
+                self.greeks.push(greeks);
             }
         }
     }
 
-    fn total_delta_exposure(&self) -> DeltaExposure {
-        self.exposures.iter().map(|x| x.delta_exposure).sum()
+    fn total_delta(&self) -> Delta {
+        self.greeks.iter().map(|x| x.delta).sum()
     }
 
-    fn total_gamma_exposure(&self) -> GammaExposure {
-        self.exposures.iter().map(|x| x.gamma_exposure).sum()
+    fn total_gamma(&self) -> Gamma {
+        self.greeks.iter().map(|x| x.gamma).sum()
     }
 
-    fn total_vega_exposure(&self) -> VegaExposure {
-        self.exposures.iter().map(|x| x.vega_exposure).sum()
+    fn total_vega(&self) -> Vega {
+        self.greeks.iter().map(|x| x.vega).sum()
     }
 
-    fn total_theta_exposure(&self) -> ThetaExposure {
-        self.exposures.iter().map(|x| x.theta_exposure).sum()
+    fn total_theta(&self) -> Theta {
+        self.greeks.iter().map(|x| x.theta).sum()
     }
 
-    fn total_exposures(&self) -> Exposures {
-        let mut total = Exposures {
-            delta_exposure: DeltaExposure(0.0),
-            gamma_exposure: GammaExposure(0.0),
-            theta_exposure: ThetaExposure(0.0),
-            vega_exposure: VegaExposure(0.0),
+    fn total_greeks(&self) -> Greeks {
+        let mut total = Greeks {
+            delta: Delta(0.0),
+            gamma: Gamma(0.0),
+            theta: Theta(0.0),
+            vega: Vega(0.0),
         };
-        for entry in &self.exposures {
-            total.delta_exposure += entry.delta_exposure;
-            total.gamma_exposure += entry.gamma_exposure;
-            total.theta_exposure += entry.theta_exposure;
-            total.vega_exposure += entry.vega_exposure;
+        for entry in &self.greeks {
+            total.delta += entry.delta;
+            total.gamma += entry.gamma;
+            total.theta += entry.theta;
+            total.vega += entry.vega;
         }
         total
     }

@@ -1,5 +1,5 @@
-use criterion::{criterion_group, criterion_main, Criterion};
-use rand::{seq::SliceRandom, Rng};
+use criterion::{Criterion, criterion_group, criterion_main};
+use rand::{Rng, seq::SliceRandom};
 
 use rdag20250730::common::*;
 
@@ -10,10 +10,10 @@ fn bench_one_worker(c: &mut Criterion, mut worker: impl Worker) {
         .map(|i| {
             (
                 InstrumentId(1 + i as u32),
-                DeltaExposure(rng.random_range(-1.0..1.0)),
-                GammaExposure(rng.random_range(-1.0..1.0)),
-                ThetaExposure(rng.random_range(-1.0..1.0)),
-                VegaExposure(rng.random_range(-1.0..1.0)),
+                Delta(rng.random_range(-1.0..1.0)),
+                Gamma(rng.random_range(-1.0..1.0)),
+                Theta(rng.random_range(-1.0..1.0)),
+                Vega(rng.random_range(-1.0..1.0)),
             )
         })
         .collect();
@@ -21,31 +21,29 @@ fn bench_one_worker(c: &mut Criterion, mut worker: impl Worker) {
     let worker_name = std::any::type_name_of_val(&worker);
     let mut g = c.benchmark_group(worker_name);
 
-    g.bench_function("insert_exposure", |b| {
+    g.bench_function("insert", |b| {
         updates.shuffle(&mut rng);
         worker = Default::default();
         b.iter(|| {
             let updates = std::hint::black_box(&updates);
             for &update in updates {
                 let (id, delta, gamma, theta, vega) = update;
-                worker.update_exposure(id, delta, gamma, theta, vega);
+                worker.update(id, delta, gamma, theta, vega);
             }
         })
     });
-    g.bench_function("update_exposure", |b| {
+    g.bench_function("update", |b| {
         updates.shuffle(&mut rng);
         b.iter(|| {
             let updates = std::hint::black_box(&updates);
             for &update in updates {
                 let (id, delta, gamma, theta, vega) = update;
-                worker.update_exposure(id, delta, gamma, theta, vega);
+                worker.update(id, delta, gamma, theta, vega);
             }
         })
     });
-    g.bench_function("total_delta_exposure", |b| {
-        b.iter(|| worker.total_delta_exposure())
-    });
-    g.bench_function("total_exposures", |b| b.iter(|| worker.total_exposures()));
+    g.bench_function("total_delta", |b| b.iter(|| worker.total_delta()));
+    g.bench_function("total_greeks", |b| b.iter(|| worker.total_greeks()));
 }
 
 fn bench_worker1(c: &mut Criterion) {

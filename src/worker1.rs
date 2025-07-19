@@ -2,68 +2,66 @@ use crate::common::*;
 
 pub struct InstrumentExposure {
     instrument_id: InstrumentId,
-    delta_exposure: DeltaExposure,
-    gamma_exposure: GammaExposure,
-    theta_exposure: ThetaExposure,
-    vega_exposure: VegaExposure,
+    delta: Delta,
+    gamma: Gamma,
+    theta: Theta,
+    vega: Vega,
 }
 
 #[derive(Default)]
 pub struct Worker1 {
-    exposures: Vec<InstrumentExposure>,
+    greeks: Vec<InstrumentExposure>,
 }
 
 impl Worker for Worker1 {
-    fn update_exposure(
+    fn update(
         &mut self,
         instrument_id: InstrumentId,
-        delta_exposure: DeltaExposure,
-        gamma_exposure: GammaExposure,
-        theta_exposure: ThetaExposure,
-        vega_exposure: VegaExposure,
+        delta: Delta,
+        gamma: Gamma,
+        theta: Theta,
+        vega: Vega,
     ) {
-        let entry = self
-            .exposures
-            .iter_mut()
-            .find(|x| x.instrument_id == instrument_id);
+        let mut entries = self.greeks.iter_mut();
+        let entry = entries.find(|x| x.instrument_id == instrument_id);
         if let Some(entry) = entry {
-            entry.delta_exposure = delta_exposure;
-            entry.gamma_exposure = gamma_exposure;
-            entry.theta_exposure = theta_exposure;
-            entry.vega_exposure = vega_exposure;
+            entry.delta = delta;
+            entry.gamma = gamma;
+            entry.theta = theta;
+            entry.vega = vega;
         } else {
-            self.exposures.push(InstrumentExposure {
+            self.greeks.push(InstrumentExposure {
                 instrument_id,
-                delta_exposure,
-                gamma_exposure,
-                theta_exposure,
-                vega_exposure,
+                delta,
+                gamma,
+                theta,
+                vega,
             })
         }
     }
 
-    fn total_delta_exposure(&self) -> DeltaExposure {
-        self.exposures.iter().map(|x| x.delta_exposure).sum()
+    fn total_delta(&self) -> Delta {
+        self.greeks.iter().map(|x| x.delta).sum()
     }
 
-    fn total_gamma_exposure(&self) -> GammaExposure {
-        self.exposures.iter().map(|x| x.gamma_exposure).sum()
+    fn total_gamma(&self) -> Gamma {
+        self.greeks.iter().map(|x| x.gamma).sum()
     }
 
-    fn total_theta_exposure(&self) -> ThetaExposure {
-        self.exposures.iter().map(|x| x.theta_exposure).sum()
+    fn total_theta(&self) -> Theta {
+        self.greeks.iter().map(|x| x.theta).sum()
     }
 
-    fn total_vega_exposure(&self) -> VegaExposure {
-        self.exposures.iter().map(|x| x.vega_exposure).sum()
+    fn total_vega(&self) -> Vega {
+        self.greeks.iter().map(|x| x.vega).sum()
     }
 
-    fn total_exposures(&self) -> Exposures {
-        Exposures {
-            delta_exposure: self.total_delta_exposure(),
-            gamma_exposure: self.total_gamma_exposure(),
-            theta_exposure: self.total_theta_exposure(),
-            vega_exposure: self.total_vega_exposure(),
+    fn total_greeks(&self) -> Greeks {
+        Greeks {
+            delta: self.total_delta(),
+            gamma: self.total_gamma(),
+            theta: self.total_theta(),
+            vega: self.total_vega(),
         }
     }
 }

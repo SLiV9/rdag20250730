@@ -1,4 +1,7 @@
 use std::collections::hash_map;
+use std::iter::Sum;
+use std::ops::Add;
+use std::ops::AddAssign;
 
 use fxhash::FxHashMap;
 
@@ -7,72 +10,72 @@ use crate::common::*;
 #[derive(Default)]
 pub struct Worker6 {
     instrument_offsets: FxHashMap<InstrumentId, usize>,
-    delta_exposures: Vec<DeltaExposure>,
-    gamma_exposures: Vec<GammaExposure>,
-    theta_exposures: Vec<ThetaExposure>,
-    vega_exposures: Vec<VegaExposure>,
+    deltas: Vec<Delta>,
+    gammas: Vec<Gamma>,
+    thetas: Vec<Theta>,
+    vegas: Vec<Vega>,
 }
 
 impl Worker for Worker6 {
-    fn update_exposure(
+    fn update(
         &mut self,
         instrument_id: InstrumentId,
-        delta_exposure: DeltaExposure,
-        gamma_exposure: GammaExposure,
-        theta_exposure: ThetaExposure,
-        vega_exposure: VegaExposure,
+        delta: Delta,
+        gamma: Gamma,
+        theta: Theta,
+        vega: Vega,
     ) {
         match self.instrument_offsets.entry(instrument_id) {
             hash_map::Entry::Occupied(occupied_entry) => {
                 let offset = *occupied_entry.get();
-                self.delta_exposures[offset] = delta_exposure;
-                self.gamma_exposures[offset] = gamma_exposure;
-                self.theta_exposures[offset] = theta_exposure;
-                self.vega_exposures[offset] = vega_exposure;
+                self.deltas[offset] = delta;
+                self.gammas[offset] = gamma;
+                self.thetas[offset] = theta;
+                self.vegas[offset] = vega;
             }
             hash_map::Entry::Vacant(vacant_entry) => {
-                let offset = self.delta_exposures.len();
+                let offset = self.deltas.len();
                 vacant_entry.insert(offset);
-                self.delta_exposures.push(delta_exposure);
-                self.gamma_exposures.push(gamma_exposure);
-                self.theta_exposures.push(theta_exposure);
-                self.vega_exposures.push(vega_exposure);
+                self.deltas.push(delta);
+                self.gammas.push(gamma);
+                self.thetas.push(theta);
+                self.vegas.push(vega);
             }
         }
     }
 
-    fn total_delta_exposure(&self) -> DeltaExposure {
-        add_exposures(DeltaExposure(0.0), &self.delta_exposures[..])
+    fn total_delta(&self) -> Delta {
+        fast_sum(Delta(0.0), &self.deltas[..])
     }
 
-    fn total_gamma_exposure(&self) -> GammaExposure {
-        add_exposures(GammaExposure(0.0), &self.gamma_exposures[..])
+    fn total_gamma(&self) -> Gamma {
+        fast_sum(Gamma(0.0), &self.gammas[..])
     }
 
-    fn total_vega_exposure(&self) -> VegaExposure {
-        add_exposures(VegaExposure(0.0), &self.vega_exposures[..])
+    fn total_vega(&self) -> Vega {
+        fast_sum(Vega(0.0), &self.vegas[..])
     }
 
-    fn total_theta_exposure(&self) -> ThetaExposure {
-        add_exposures(ThetaExposure(0.0), &self.theta_exposures[..])
+    fn total_theta(&self) -> Theta {
+        fast_sum(Theta(0.0), &self.thetas[..])
     }
 
-    fn total_exposures(&self) -> Exposures {
-        Exposures {
-            delta_exposure: self.total_delta_exposure(),
-            gamma_exposure: self.total_gamma_exposure(),
-            theta_exposure: self.total_theta_exposure(),
-            vega_exposure: self.total_vega_exposure(),
+    fn total_greeks(&self) -> Greeks {
+        Greeks {
+            delta: self.total_delta(),
+            gamma: self.total_gamma(),
+            theta: self.total_theta(),
+            vega: self.total_vega(),
         }
     }
 }
 
-fn add_exposures<T>(zero: T, mut values: &[T]) -> T
+fn fast_sum<T>(zero_value: T, mut values: &[T]) -> T
 where
-    T: Copy + std::ops::Add<Output = T> + std::ops::AddAssign + std::iter::Sum,
+    T: Copy + Add<Output = T> + AddAssign + Sum,
 {
     const CHUNK_SIZE: usize = 128;
-    let mut sums = [zero; CHUNK_SIZE];
+    let mut sums = [zero_value; CHUNK_SIZE];
     while let Some(chunk) = values.first_chunk() {
         let chunk: &[T; CHUNK_SIZE] = chunk;
         for i in 0..CHUNK_SIZE {
