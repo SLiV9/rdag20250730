@@ -12,9 +12,8 @@ fn bench_one_worker(c: &mut Criterion, mut worker: impl Worker) {
                 InstrumentId(1 + i as u32),
                 DeltaExposure(rng.random_range(-1.0..1.0)),
                 GammaExposure(rng.random_range(-1.0..1.0)),
-                VegaExposure(rng.random_range(-1.0..1.0)),
                 ThetaExposure(rng.random_range(-1.0..1.0)),
-                CharmExposure(rng.random_range(-1.0..1.0)),
+                VegaExposure(rng.random_range(-1.0..1.0)),
             )
         })
         .collect();
@@ -28,8 +27,8 @@ fn bench_one_worker(c: &mut Criterion, mut worker: impl Worker) {
         b.iter(|| {
             let updates = std::hint::black_box(&updates);
             for &update in updates {
-                let (i, d, g, v, t, c) = update;
-                worker.update_exposure(i, d, g, v, t, c);
+                let (id, delta, gamma, theta, vega) = update;
+                worker.update_exposure(id, delta, gamma, theta, vega);
             }
         })
     });
@@ -38,8 +37,8 @@ fn bench_one_worker(c: &mut Criterion, mut worker: impl Worker) {
         b.iter(|| {
             let updates = std::hint::black_box(&updates);
             for &update in updates {
-                let (i, d, g, v, t, c) = update;
-                worker.update_exposure(i, d, g, v, t, c);
+                let (id, delta, gamma, theta, vega) = update;
+                worker.update_exposure(id, delta, gamma, theta, vega);
             }
         })
     });

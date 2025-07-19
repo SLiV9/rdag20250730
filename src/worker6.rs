@@ -9,9 +9,8 @@ pub struct Worker6 {
     instrument_offsets: FxHashMap<InstrumentId, usize>,
     delta_exposures: Vec<DeltaExposure>,
     gamma_exposures: Vec<GammaExposure>,
-    vega_exposures: Vec<VegaExposure>,
     theta_exposures: Vec<ThetaExposure>,
-    charm_exposures: Vec<CharmExposure>,
+    vega_exposures: Vec<VegaExposure>,
 }
 
 impl Worker for Worker6 {
@@ -20,27 +19,24 @@ impl Worker for Worker6 {
         instrument_id: InstrumentId,
         delta_exposure: DeltaExposure,
         gamma_exposure: GammaExposure,
-        vega_exposure: VegaExposure,
         theta_exposure: ThetaExposure,
-        charm_exposure: CharmExposure,
+        vega_exposure: VegaExposure,
     ) {
         match self.instrument_offsets.entry(instrument_id) {
             hash_map::Entry::Occupied(occupied_entry) => {
                 let offset = *occupied_entry.get();
                 self.delta_exposures[offset] = delta_exposure;
                 self.gamma_exposures[offset] = gamma_exposure;
-                self.vega_exposures[offset] = vega_exposure;
                 self.theta_exposures[offset] = theta_exposure;
-                self.charm_exposures[offset] = charm_exposure;
+                self.vega_exposures[offset] = vega_exposure;
             }
             hash_map::Entry::Vacant(vacant_entry) => {
                 let offset = self.delta_exposures.len();
                 vacant_entry.insert(offset);
                 self.delta_exposures.push(delta_exposure);
                 self.gamma_exposures.push(gamma_exposure);
-                self.vega_exposures.push(vega_exposure);
                 self.theta_exposures.push(theta_exposure);
-                self.charm_exposures.push(charm_exposure);
+                self.vega_exposures.push(vega_exposure);
             }
         }
     }
@@ -61,17 +57,12 @@ impl Worker for Worker6 {
         add_exposures(ThetaExposure(0.0), &self.theta_exposures[..])
     }
 
-    fn total_charm_exposure(&self) -> CharmExposure {
-        add_exposures(CharmExposure(0.0), &self.charm_exposures[..])
-    }
-
     fn total_exposures(&self) -> Exposures {
         Exposures {
             delta_exposure: self.total_delta_exposure(),
             gamma_exposure: self.total_gamma_exposure(),
-            vega_exposure: self.total_vega_exposure(),
             theta_exposure: self.total_theta_exposure(),
-            charm_exposure: self.total_charm_exposure(),
+            vega_exposure: self.total_vega_exposure(),
         }
     }
 }

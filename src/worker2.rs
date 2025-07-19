@@ -1,6 +1,4 @@
-
 use std::collections::HashMap;
-
 
 use crate::common::*;
 
@@ -15,20 +13,16 @@ impl Worker for Worker2 {
         instrument_id: InstrumentId,
         delta_exposure: DeltaExposure,
         gamma_exposure: GammaExposure,
-        vega_exposure: VegaExposure,
         theta_exposure: ThetaExposure,
-        charm_exposure: CharmExposure,
+        vega_exposure: VegaExposure,
     ) {
-        self.exposures.insert(
-            instrument_id,
-            Exposures {
-                delta_exposure,
-                gamma_exposure,
-                vega_exposure,
-                theta_exposure,
-                charm_exposure,
-            },
-        );
+        let exposures = Exposures {
+            delta_exposure,
+            gamma_exposure,
+            theta_exposure,
+            vega_exposure,
+        };
+        self.exposures.insert(instrument_id, exposures);
     }
 
     fn total_delta_exposure(&self) -> DeltaExposure {
@@ -47,24 +41,18 @@ impl Worker for Worker2 {
         self.exposures.values().map(|x| x.theta_exposure).sum()
     }
 
-    fn total_charm_exposure(&self) -> CharmExposure {
-        self.exposures.values().map(|x| x.charm_exposure).sum()
-    }
-
     fn total_exposures(&self) -> Exposures {
         let mut total = Exposures {
             delta_exposure: DeltaExposure(0.0),
             gamma_exposure: GammaExposure(0.0),
-            vega_exposure: VegaExposure(0.0),
             theta_exposure: ThetaExposure(0.0),
-            charm_exposure: CharmExposure(0.0),
+            vega_exposure: VegaExposure(0.0),
         };
         for entry in self.exposures.values() {
             total.delta_exposure += entry.delta_exposure;
             total.gamma_exposure += entry.gamma_exposure;
-            total.vega_exposure += entry.vega_exposure;
             total.theta_exposure += entry.theta_exposure;
-            total.charm_exposure += entry.charm_exposure;
+            total.vega_exposure += entry.vega_exposure;
         }
         total
     }
