@@ -6,7 +6,7 @@ use crate::common::*;
 
 #[derive(Default)]
 pub struct Worker3 {
-    instrument_offsets: FxHashMap<InstrumentId, usize>,
+    instrument_offsets: FxHashMap<Id, usize>,
     deltas: Vec<Delta>,
     gammas: Vec<Gamma>,
     thetas: Vec<Theta>,
@@ -14,29 +14,22 @@ pub struct Worker3 {
 }
 
 impl Worker for Worker3 {
-    fn update(
-        &mut self,
-        instrument_id: InstrumentId,
-        delta: Delta,
-        gamma: Gamma,
-        theta: Theta,
-        vega: Vega,
-    ) {
-        match self.instrument_offsets.entry(instrument_id) {
+    fn update(&mut self, id: Id, greeks: Greeks) {
+        match self.instrument_offsets.entry(id) {
             hash_map::Entry::Occupied(occupied_entry) => {
                 let offset = *occupied_entry.get();
-                self.deltas[offset] = delta;
-                self.gammas[offset] = gamma;
-                self.thetas[offset] = theta;
-                self.vegas[offset] = vega;
+                self.deltas[offset] = greeks.delta;
+                self.gammas[offset] = greeks.gamma;
+                self.thetas[offset] = greeks.theta;
+                self.vegas[offset] = greeks.vega;
             }
             hash_map::Entry::Vacant(vacant_entry) => {
                 let offset = self.deltas.len();
                 vacant_entry.insert(offset);
-                self.deltas.push(delta);
-                self.gammas.push(gamma);
-                self.thetas.push(theta);
-                self.vegas.push(vega);
+                self.deltas.push(greeks.delta);
+                self.gammas.push(greeks.gamma);
+                self.thetas.push(greeks.theta);
+                self.vegas.push(greeks.vega);
             }
         }
     }

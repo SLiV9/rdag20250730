@@ -17,27 +17,16 @@
 		<div class="reveal">
 			<div class="slides">
 				<section>
-Rust in High Frequency Trading
+<h2 class="r-fit-text">Rust in High Frequency Trading</h2>
 
-Sander in 't Veld
-
-Senior Software Engineer at BlockTech since 2023
-
-July 30, 2025
-
-Rust Meetup @ BlockTech
+<p align="right">Sander in 't Veld</p>
+<p align="right">Rust Meetup @ BlockTech</p>
+<p align="right">July 30, 2025</p>
 				</section>
 				<section>
-<pre><code data-line-numbers="3,8-10">
-pub trait Worker: Default {
-    fn update(
-        &mut self,
-        instrument_id: InstrumentId,
-        delta: Delta,
-        gamma: Gamma,
-        theta: Theta,
-        vega: Vega,
-    );
+<pre><code data-line-numbers>
+pub trait Worker {
+    fn update(&mut self, id: Id, greeks: Greeks);
 
     fn total_delta(&self) -> Delta;
     fn total_gamma(&self) -> Gamma;
@@ -45,6 +34,7 @@ pub trait Worker: Default {
     fn total_vega(&self) -> Vega;
     fn total_greeks(&self) -> Greeks;
 }
+
 </code></pre>
 				</section>
 				<section>Slide 2</section>

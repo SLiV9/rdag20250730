@@ -6,26 +6,13 @@ use crate::common::*;
 
 #[derive(Default)]
 pub struct Worker4 {
-    instrument_offsets: FxHashMap<InstrumentId, usize>,
+    instrument_offsets: FxHashMap<Id, usize>,
     greeks: Vec<Greeks>,
 }
 
 impl Worker for Worker4 {
-    fn update(
-        &mut self,
-        instrument_id: InstrumentId,
-        delta: Delta,
-        gamma: Gamma,
-        theta: Theta,
-        vega: Vega,
-    ) {
-        let greeks = Greeks {
-            delta,
-            gamma,
-            theta,
-            vega,
-        };
-        match self.instrument_offsets.entry(instrument_id) {
+    fn update(&mut self, id: Id, greeks: Greeks) {
+        match self.instrument_offsets.entry(id) {
             hash_map::Entry::Occupied(occupied_entry) => {
                 let offset = *occupied_entry.get();
                 self.greeks[offset] = greeks;

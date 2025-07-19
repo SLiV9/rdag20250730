@@ -1,59 +1,40 @@
 use crate::common::*;
 
-pub struct InstrumentExposure {
-    instrument_id: InstrumentId,
-    delta: Delta,
-    gamma: Gamma,
-    theta: Theta,
-    vega: Vega,
+pub struct InstrumentData {
+    id: Id,
+    greeks: Greeks,
 }
 
 #[derive(Default)]
 pub struct Worker1 {
-    greeks: Vec<InstrumentExposure>,
+    greeks: Vec<InstrumentData>,
 }
 
 impl Worker for Worker1 {
-    fn update(
-        &mut self,
-        instrument_id: InstrumentId,
-        delta: Delta,
-        gamma: Gamma,
-        theta: Theta,
-        vega: Vega,
-    ) {
-        let mut entries = self.greeks.iter_mut();
-        let entry = entries.find(|x| x.instrument_id == instrument_id);
-        if let Some(entry) = entry {
-            entry.delta = delta;
-            entry.gamma = gamma;
-            entry.theta = theta;
-            entry.vega = vega;
+    fn update(&mut self, id: Id, greeks: Greeks) {
+        if let Some(entry) =
+            self.greeks.iter_mut().find(|x| x.id == id)
+        {
+            entry.greeks = greeks;
         } else {
-            self.greeks.push(InstrumentExposure {
-                instrument_id,
-                delta,
-                gamma,
-                theta,
-                vega,
-            })
+            self.greeks.push(InstrumentData { id, greeks });
         }
     }
 
     fn total_delta(&self) -> Delta {
-        self.greeks.iter().map(|x| x.delta).sum()
+        self.greeks.iter().map(|x| x.greeks.delta).sum()
     }
 
     fn total_gamma(&self) -> Gamma {
-        self.greeks.iter().map(|x| x.gamma).sum()
+        self.greeks.iter().map(|x| x.greeks.gamma).sum()
     }
 
     fn total_theta(&self) -> Theta {
-        self.greeks.iter().map(|x| x.theta).sum()
+        self.greeks.iter().map(|x| x.greeks.theta).sum()
     }
 
     fn total_vega(&self) -> Vega {
-        self.greeks.iter().map(|x| x.vega).sum()
+        self.greeks.iter().map(|x| x.greeks.vega).sum()
     }
 
     fn total_greeks(&self) -> Greeks {

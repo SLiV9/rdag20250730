@@ -4,25 +4,12 @@ use crate::common::*;
 
 #[derive(Default)]
 pub struct Worker2 {
-    greeks: HashMap<InstrumentId, Greeks>,
+    greeks: HashMap<Id, Greeks>,
 }
 
 impl Worker for Worker2 {
-    fn update(
-        &mut self,
-        instrument_id: InstrumentId,
-        delta: Delta,
-        gamma: Gamma,
-        theta: Theta,
-        vega: Vega,
-    ) {
-        let greeks = Greeks {
-            delta,
-            gamma,
-            theta,
-            vega,
-        };
-        self.greeks.insert(instrument_id, greeks);
+    fn update(&mut self, id: Id, greeks: Greeks) {
+        self.greeks.insert(id, greeks);
     }
 
     fn total_delta(&self) -> Delta {
