@@ -1,0 +1,14 @@
+[package]
+name = "rdag20250730"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+criterion = "0.6.0"
+derive_more = { version = "2.0.1", features = ["full"] }
+fxhash = "0.2.1"
+rand = "0.9.1"
+
+[[bench]]
+name = "bench_soa"
+harness = false
