@@ -1,9 +1,5 @@
-use criterion::{criterion_group, criterion_main, Criterion};
-use rand::{seq::SliceRandom, Rng};
+use std::collections::hash_map;
 
-use std::collections::{hash_map, HashMap};
-
-use derive_more::{Add, AddAssign, Sum};
 use fxhash::FxHashMap;
 
 use crate::common::*;
@@ -82,20 +78,19 @@ impl Worker for Worker6 {
 
 fn add_exposures<T>(zero: T, mut values: &[T]) -> T
 where
-    T: Copy + std::ops::Add<Output = T> + std::ops::AddAssign,
+    T: Copy + std::ops::Add<Output = T> + std::ops::AddAssign + std::iter::Sum,
 {
-    let mut sums = [zero; 8];
+    const CHUNK_SIZE: usize = 128;
+    let mut sums = [zero; CHUNK_SIZE];
     while let Some(chunk) = values.first_chunk() {
-        let chunk: &[T; 8] = chunk;
-        for i in 0..8 {
+        let chunk: &[T; CHUNK_SIZE] = chunk;
+        for i in 0..CHUNK_SIZE {
             sums[i] += chunk[i];
         }
-        values = &values[8..];
+        values = &values[CHUNK_SIZE..];
     }
-    let mut sum =
-        ((sums[0] + sums[1]) + (sums[2] + sums[3])) + ((sums[4] + sums[5]) + (sums[6] + sums[7]));
-    for v in values {
-        sum += *v;
+    for (i, v) in values.iter().enumerate() {
+        sums[i] += *v;
     }
-    sum
+    sums.iter().copied().sum()
 }

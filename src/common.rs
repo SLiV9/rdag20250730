@@ -1,10 +1,4 @@
-use criterion::{criterion_group, criterion_main, Criterion};
-use rand::{seq::SliceRandom, Rng};
-
-use std::collections::{hash_map, HashMap};
-
 use derive_more::{Add, AddAssign, Sum};
-use fxhash::FxHashMap;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct InstrumentId(pub u32);
@@ -32,7 +26,7 @@ pub struct Exposures {
     pub charm_exposure: CharmExposure,
 }
 
-pub trait Worker {
+pub trait Worker: Default {
     fn update_exposure(
         &mut self,
         instrument_id: InstrumentId,
