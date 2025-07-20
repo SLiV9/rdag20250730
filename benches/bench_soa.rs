@@ -58,11 +58,14 @@ fn bench_one_worker(
 }
 
 fn bench_worker1(c: &mut Criterion) {
-    bench_one_worker(c, w::worker1::Worker1::default())
+    bench_one_worker(c, w::worker1::NaiveWorker::default())
 }
 
 fn bench_worker2(c: &mut Criterion) {
-    bench_one_worker(c, w::worker2::Worker2::default())
+    bench_one_worker(
+        c,
+        w::worker2::HashMapWorker::default(),
+    )
 }
 
 fn bench_worker3(c: &mut Criterion) {
