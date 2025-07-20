@@ -19,24 +19,101 @@
 				<section>
 <h2 class="r-fit-text">Rust <span class="mark">in High Frequency Trading</span></h2>
 
-<p align="right">July 30, 2025</p>
+<p align="right">30 July 2025</p>
 <p align="right">Sander in 't Veld</p>
 <p align="right">Rust Meetup <span class="mark">@ BlockTech</span></p>
 				</section>
 
 
 				<section>
-<pre><code data-line-numbers class="language-rust">
-<script type="text/template">pub trait Worker {
-    vec: Vec<Greeks>,
-    fn update(&mut self, id: Id, greeks: Greeks);
+<!-- When I joined, I was unsure how much Rust I'd really be writing. -->
+<!-- TODO turn into a graph -->
+<!-- TODO check these numbers -->
+<img src="graph_languages.png"></img>
+				</section>
 
-    fn total_delta(&self) -> Delta;
-    fn total_gamma(&self) -> Gamma;
-    fn total_theta(&self) -> Theta;
-    fn total_vega(&self) -> Vega;
-    fn total_greeks(&self) -> Greeks;
+
+				<section>
+<pre><code data-line-numbers class="language-sql">
+<script type="text/template">SELECT t.transaction_time,
+	t.price,
+	t.size,
+	o.component_id,
+	o.order_id
+FROM risk.private_trades t
+LEFT JOIN execution.orders o
+  ON t.transaction_time = o.transaction_time
+</script></code></pre>
+<pre><code data-line-numbers class="language-python">
+<script type="text/template">class PrivateTrade:
+	price: float
+	size: float
+	transaction_time: datetime
+</script></code></pre>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">struct Order {
+	component_id: u64,
+	order_id: u64,
+	transaction_time: SystemTime,
 }
+</script></code></pre>
+				</section>
+
+
+				<section data-markdown>
+					<textarea data-template>
+						### Why I enjoy working here</span>
+						- Fun
+						- Challenging
+						- Fast
+						- Safe
+						- Ambitious
+						- Focus on what matters
+						- Work with amazing tools
+						- Smart people from different fields
+					</textarea>
+				</section>
+
+
+				<section data-markdown>
+					<textarea data-template>
+						### Why Rust is great <span class="mark">in HFT</span>
+						- Fun and challenging
+						- Fast
+						- No segfaults
+						- No buffer overflows or uninitialized data
+						- No memory leaks
+						- Great
+					</textarea>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">#[derive(Clone, Copy)]
+pub struct Greeks {
+    pub delta: f32,
+    pub gamma: f32,
+    pub theta: f32,
+    pub vega: f32,
+}
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">#[derive(Clone, Copy)]
+pub struct Delta(pub f32);
+
+#[derive(Clone, Copy)]
+pub struct Gamma(pub f32);
+
+#[derive(Clone, Copy)]
+pub struct Theta(pub f32);
+
+#[derive(Clone, Copy)]
+pub struct Vega(pub f32);
 </script></code></pre>
 				</section>
 
@@ -49,7 +126,22 @@ pub struct Greeks {
     pub gamma: Gamma,
     pub theta: Theta,
     pub vega: Vega,
-    vegas: Vec<Vega>,
+}
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">pub trait Worker {
+    fn update(&mut self, id: Id, greeks: Greeks);
+
+    fn total_delta(&self) -> Delta;
+    fn total_gamma(&self) -> Gamma;
+    fn total_theta(&self) -> Theta;
+    fn total_vega(&self) -> Vega;
+
+    fn total_greeks(&self) -> Greeks;
 }
 </script></code></pre>
 				</section>
@@ -77,7 +169,11 @@ pub struct Vega(pub f32);
 
 				<section>
 <pre><code data-line-numbers class="language-rust">
-<script type="text/template">impl Worker for Worker1 {
+<script type="text/template">pub struct NaiveWorker {
+    greeks: Vec<InstrumentData>,
+}
+
+impl Worker for NaiveWorker {
     fn update(&mut self, id: Id, greeks: Greeks) {
         if let Some(entry) =
             self.greeks.iter_mut().find(|x| x.id == id)
@@ -87,6 +183,31 @@ pub struct Vega(pub f32);
             self.greeks.push(InstrumentData { id, greeks });
         }
     }
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">impl Worker for NaiveWorker {
+    // ...
+    fn total_delta(&self) -> Delta {
+        self.greeks.iter().map(|x| x.greeks.delta).sum()
+    }
+
+    fn total_gamma(&self) -> Gamma {
+        self.greeks.iter().map(|x| x.greeks.gamma).sum()
+    }
+    //...
+    fn total_greeks(&self) -> Greeks {
+        Greeks {
+            delta: self.total_delta(),
+            gamma: self.total_gamma(),
+            theta: self.total_theta(),
+            vega: self.total_vega(),
+        }
+    }
+}
 </script></code></pre>
 				</section>
 

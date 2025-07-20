@@ -6,11 +6,11 @@ pub struct InstrumentData {
 }
 
 #[derive(Default)]
-pub struct Worker1 {
+pub struct NaiveWorker {
     greeks: Vec<InstrumentData>,
 }
 
-impl Worker for Worker1 {
+impl Worker for NaiveWorker {
     fn update(&mut self, id: Id, greeks: Greeks) {
         if let Some(entry) =
             self.greeks.iter_mut().find(|x| x.id == id)

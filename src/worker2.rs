@@ -3,11 +3,11 @@ use std::collections::HashMap;
 use crate::common::*;
 
 #[derive(Default)]
-pub struct Worker2 {
+pub struct HashMapWorker {
     greeks: HashMap<Id, Greeks>,
 }
 
-impl Worker for Worker2 {
+impl Worker for HashMapWorker {
     fn update(&mut self, id: Id, greeks: Greeks) {
         self.greeks.insert(id, greeks);
     }
