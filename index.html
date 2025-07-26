@@ -62,6 +62,21 @@ LEFT JOIN execution.orders o
 
 				<section data-markdown>
 					<textarea data-template>
+						### </span>
+						- Fun
+						- Challenging
+						- Fast
+						- Safe
+						- Ambitious
+						- Focus on what matters
+						- Work with amazing tools
+						- Smart people from different fields
+					</textarea>
+				</section>
+
+
+				<section data-markdown>
+					<textarea data-template>
 						### Why I enjoy working here</span>
 						- Fun
 						- Challenging
@@ -78,13 +93,141 @@ LEFT JOIN execution.orders o
 				<section data-markdown>
 					<textarea data-template>
 						### Why Rust is great <span class="mark">in HFT</span>
-						- Fun and challenging
+						- Fun
+						- Challenging
 						- Fast
-						- No segfaults
-						- No buffer overflows or uninitialized data
-						- No memory leaks
-						- Great
+						- Safe
+						- Ambitious
+						- Focus on what matters
+						- Work with amazing tools
+						- Smart people from different fields
 					</textarea>
+				</section>
+
+
+				<section data-markdown>
+					<textarea data-template>
+						### Why Rust is great <span class="mark">in HFT</span>
+						- Fast
+							- 1 second is a very busy exchange
+							- 250 ms is the average human reaction speed
+							- 65 ms for light to cross the globe
+							- 1 ms
+							- 100 us
+							- 10 us
+							- 1 us for a thread context switch
+							- 100ns is too slow to compete with FPGAs
+					</textarea>
+				</section>
+
+
+				<section data-markdown>
+					<textarea data-template>
+						### Why Rust is great <span class="mark">in HFT</span>
+						- Safe
+							- No segfaults
+							- No buffer overflows*
+							- No uninitialized data*
+							- No memory leaks
+						- Focus on what matters
+					</textarea>
+				</section>
+
+
+				<section data-markdown>
+					<textarea data-template>
+						### Why Rust is great <span class="mark">in HFT</span>
+						- Work with amazing tools
+							- Cargo.toml
+							- serde
+							- cargo fmt
+							- cargo clippy
+							- cargo asm
+					</textarea>
+				</section>
+
+
+				<section data-markdown>
+					<textarea data-template>
+						### Why <span class="mark">Rust in HFT</span> is great
+						- Smart people from different fields
+							- Mathematicians
+							- Data analysts
+							- Economists
+							- Nerds
+
+Α α, Β β, <span class="mark">Γ</span> γ, <span class="mark">Δ</span> δ, Ε <span class="mark">ε</span>, Ζ ζ, Η η, <span class="mark">Θ</span> θ, Ι ι,
+
+Κ κ, Λ <span class="mark">λ</span>, Μ <span class="mark">μ</span>, Ν ν, Ξ ξ, Ο ο, Π <span class="mark">π</span>, <span class="mark">Ρ</span> ρ,
+
+Σ <span class="mark">σ</span> ς, Τ τ, Υ υ, Φ φ, Χ χ, Ψ ψ, Ω ω, <span class="mark">Ⅎ?</span>
+					</textarea>
+				</section>
+
+
+				<section data-markdown>
+					<textarea data-template>
+						### Why <span class="mark">Rust in HFT</span> is great
+						- Fun
+						- Challenging
+					</textarea>
+				</section>
+
+
+				<section data-markdown>
+					<textarea data-template>
+						### Why <span class="mark">Rust in HFT</span> is great
+						- Fast
+						- Safe
+						- Ambitious
+					</textarea>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">impl Worker {
+    pub fn update(&mut self, id: Id,
+        delta: f32, gamma: f32,
+        theta: f32, vega: f32);
+
+    pub fn total_delta(&self) -> f32;
+    pub fn total_gamma(&self) -> f32;
+    pub fn total_theta(&self) -> f32;
+    pub fn total_vega(&self) -> f32;
+}
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">    // ...
+    let delta = calculate_delta(strike, forward);
+    let gamma = calculate_gamma(strike, forward);
+    let vega = calculate_vega(strike, forward);
+    worker.update(id, delta, gamma, vega, 0.0);
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">impl Worker {
+    pub fn update(&mut self, id: Id,
+        delta: f32, gamma: f32,
+        theta: f32, vega: f32);
+
+    // ...
+}
+</script></code></pre>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">    // ...
+    let delta = calculate_delta(strike, forward);
+    let gamma = calculate_gamma(strike, forward);
+    let vega = calculate_vega(strike, forward);
+    worker.update(id, delta, gamma, vega, 0.0);
+</script></code></pre>
 				</section>
 
 
@@ -98,12 +241,100 @@ pub struct Greeks {
     pub vega: f32,
 }
 </script></code></pre>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">    // ...
+    let greeks = Greeks {
+        delta: calculate_delta(strike, forward),
+        gamma: calculate_gamma(strike, forward),
+        vega: calculate_vega(strike, forward),
+        theta: 0.0,
+    };
+    worker.update(id, greeks);
+</script></code></pre>
 				</section>
 
 
 				<section>
 <pre><code data-line-numbers class="language-rust">
 <script type="text/template">#[derive(Clone, Copy)]
+pub struct Greeks {
+    pub delta: f32,
+    pub gamma: f32,
+    pub theta: f32,
+    pub vega: f32,
+}
+</script></code></pre>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">impl Worker {
+    pub fn update(&mut self, id: Id, greeks: Greeks);
+
+    pub fn total_delta(&self) -> f32;
+    pub fn total_gamma(&self) -> f32;
+    pub fn total_theta(&self) -> f32;
+    pub fn total_vega(&self) -> f32;
+}
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">pub fn update(&mut self, id: Id, 
+        delta: f32, gamma: f32,
+        theta: f32, vega: f32) {
+    // ...
+    entry.greeks = Greeks { delta, gamma, theta, vega };
+</script></code></pre>
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">	vmovss dword ptr [rax + r8 - 20], xmm0
+	vmovss dword ptr [rax + r8 - 16], xmm1
+	vmovss dword ptr [rax + r8 - 12], xmm2
+	vmovss dword ptr [rax + r8 - 8], xmm3
+</script></code></pre>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">pub fn update(&mut self, id: Id, greeks: Greeks) {
+    // ...
+    entry.greeks = greeks;
+</script></code></pre>
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">	vmovups xmm0, xmmword ptr [rdx]
+	vmovups xmmword ptr [rax + r9 - 20], xmm0
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">impl Worker {
+    pub fn update(&mut self, id: Id,
+        delta: f32, gamma: f32,
+        theta: f32, vega: f32);
+
+    pub fn total_delta(&self) -> f32;
+    pub fn total_gamma(&self) -> f32;
+    pub fn total_theta(&self) -> f32;
+    pub fn total_vega(&self) -> f32;
+}
+</script></code></pre>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">impl Worker {
+    pub fn update(&mut self, id: Id, greeks: Greeks);
+
+    pub fn total_delta(&self) -> f32;
+    pub fn total_gamma(&self) -> f32;
+    pub fn total_theta(&self) -> f32;
+    pub fn total_vega(&self) -> f32;
+}
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">#[derive(Clone, Copy)]
+pub struct Id(pub u32);
+
+#[derive(Clone, Copy)]
 pub struct Delta(pub f32);
 
 #[derive(Clone, Copy)]
@@ -128,20 +359,57 @@ pub struct Greeks {
     pub vega: Vega,
 }
 </script></code></pre>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">impl Worker {
+    pub fn update(&mut self, id: Id, greeks: Greeks);
+
+    pub fn total_delta(&self) -> Delta;
+    pub fn total_gamma(&self) -> Gamma;
+    pub fn total_theta(&self) -> Theta;
+    pub fn total_vega(&self) -> Vega;
+}
+</script></code></pre>
 				</section>
 
 
 				<section>
 <pre><code data-line-numbers class="language-rust">
-<script type="text/template">pub trait Worker {
+<script type="text/template">pub struct Worker {
+    greeks: Vec<InstrumentData>,
+}
+
+impl Worker {
+    fn update(&mut self, id: Id, greeks: Greeks) {
+        if let Some(entry) =
+            self.greeks.iter_mut().find(|x| x.id == id)
+        {
+            entry.greeks = greeks;
+        } else {
+            self.greeks.push(InstrumentData { id, greeks });
+        }
+    }
+    // ...
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">pub struct NaiveWorker {
+    greeks: Vec<InstrumentData>,
+}
+
+pub struct HashMapWorker {
+    greeks: std::collections::HashMap<Id, Greeks>,
+}
+
+pub trait Worker {
     fn update(&mut self, id: Id, greeks: Greeks);
 
     fn total_delta(&self) -> Delta;
     fn total_gamma(&self) -> Gamma;
     fn total_theta(&self) -> Theta;
     fn total_vega(&self) -> Vega;
-
-    fn total_greeks(&self) -> Greeks;
 }
 </script></code></pre>
 				</section>
@@ -169,52 +437,59 @@ pub struct Vega(pub f32);
 
 				<section>
 <pre><code data-line-numbers class="language-rust">
-<script type="text/template">pub struct NaiveWorker {
-    greeks: Vec<InstrumentData>,
+<script type="text/template">pub struct HashMapWorker {
+    greeks: std::collections::HashMap<Id, Greeks>,
 }
 
-impl Worker for NaiveWorker {
+impl Worker for HashMapworker {
     fn update(&mut self, id: Id, greeks: Greeks) {
-        if let Some(entry) =
-            self.greeks.iter_mut().find(|x| x.id == id)
-        {
-            entry.greeks = greeks;
-        } else {
-            self.greeks.push(InstrumentData { id, greeks });
-        }
+        self.greeks.insert(id, greeks);
     }
-</script></code></pre>
-				</section>
 
-
-				<section>
-<pre><code data-line-numbers class="language-rust">
-<script type="text/template">impl Worker for NaiveWorker {
-    // ...
     fn total_delta(&self) -> Delta {
-        self.greeks.iter().map(|x| x.greeks.delta).sum()
+        self.greeks.values().map(|x| x.delta).sum()
     }
 
     fn total_gamma(&self) -> Gamma {
-        self.greeks.iter().map(|x| x.greeks.gamma).sum()
+        self.greeks.values().map(|x| x.gamma).sum()
     }
-    //...
-}
+    // ...
 </script></code></pre>
 				</section>
 
 
 				<section>
 <pre><code data-line-numbers class="language-rust">
-<script type="text/template">impl Worker for NaiveWorker {
-    //...
+<script type="text/template">    // ...
+    let total_greeks = Greeks {
+        delta: self.total_delta(),
+        gamma: self.total_gamma(),
+        theta: self.total_theta(),
+        vega: self.total_vega(),
+    };
+    // ...
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">impl Worker for HashMapworker {
+    // ...
     fn total_greeks(&self) -> Greeks {
-        Greeks {
-            delta: self.total_delta(),
-            gamma: self.total_gamma(),
-            theta: self.total_theta(),
-            vega: self.total_vega(),
+        let mut total = Greeks {
+            delta: Delta(0.0),
+            gamma: Gamma(0.0),
+            theta: Theta(0.0),
+            vega: Vega(0.0),
+        };
+        for entry in self.greeks.values() {
+            total.delta += entry.delta;
+            total.gamma += entry.gamma;
+            total.theta += entry.theta;
+            total.vega += entry.vega;
         }
+        total
     }
 }
 </script></code></pre>
@@ -357,7 +632,6 @@ Found 8 outliers among 100 measurements (8.00%)
 				</section>
 
 
-
 				<section>
 <pre><code data-line-numbers class="language-x86asm">
 <script type="text/template">	.p2align	4
@@ -379,7 +653,19 @@ Found 8 outliers among 100 measurements (8.00%)
 
 
 
-				<section>Slide 2</section>
+				<section data-markdown>
+					<textarea data-template>
+						### Why <span class="mark">Rust in HFT</span> is great
+						- Fun
+						- Challenging
+						- Fast
+						- Safe
+						- Ambitious
+						- Focus on what matters
+						- Work with amazing tools
+						- Smart people from different fields
+					</textarea>
+				</section>
 			</div>
 		</div>
 

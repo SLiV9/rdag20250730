@@ -31,7 +31,7 @@
   color: #00FF00;
 }
 .hljs-comment, .hljs-quote {
-  color: #6a35ff;
+  color: #8d7eb9;
   font-style: italic;
 }
 .hljs-doctag, .hljs-formula {
@@ -51,7 +51,10 @@
 .hljs-class .hljs-title {
   color: #cfffa1;
 }
-.hljs-attr, .hljs-variable, .hljs-template-variable, .hljs-type, .hljs-selector-class, .hljs-selector-attr, .hljs-selector-pseudo, .hljs-number {
+.hljs-variable, .hljs-template-variable {
+  color: #f8f8ff;
+}
+.hljs-attr, .hljs-type, .hljs-selector-class, .hljs-selector-attr, .hljs-selector-pseudo, .hljs-number {
   color: #cc85ff;
 }
 .hljs-symbol, .hljs-title {
