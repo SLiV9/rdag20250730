@@ -57,3 +57,9 @@ impl Worker for AosWorker {
         total
     }
 }
+
+pub fn aos_worker_total_greeks(
+    worker: &AosWorker,
+) -> Greeks {
+    worker.total_greeks()
+}

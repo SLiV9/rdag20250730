@@ -27,8 +27,6 @@
 
 				<section>
 <!-- When I joined, I was unsure how much Rust I'd really be writing. -->
-<!-- TODO turn into a graph -->
-<!-- TODO check these numbers -->
 <img src="graph_languages.png"></img>
 				</section>
 
@@ -77,7 +75,7 @@ LEFT JOIN execution.orders o
 
 				<section data-markdown>
 					<textarea data-template>
-						### Why I enjoy working here</span>
+						### Why I enjoy working in HFT</span>
 						- Fun
 						- Challenging
 						- Fast
@@ -647,6 +645,44 @@ AosWorker/total_delta
                     time:   [8.7238 µs 8.7373 µs 8.7538 µs]
 AosWorker/total_greeks
                     time:   [8.7125 µs 8.7172 µs 8.7223 µs]
+</script></code></pre>
+				</section>
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">    fn total_greeks(&self) -> Greeks {
+        // ...
+        for entry in &self.greeks {
+            total.delta += entry.delta;
+            total.gamma += entry.gamma;
+            total.theta += entry.theta;
+            total.vega += entry.vega;
+        }
+        total
+    }
+</script></code></pre>
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">.LBB19_4:
+	vaddps xmm0, xmm0, xmmword ptr [rdx + rsi]
+	add rsi, 16
+	cmp rcx, rsi
+	jne .LBB19_4
+	vmovups xmmword ptr [rax], xmm0
+	ret
+</script></code></pre>
+				</section>
+
+				<section>
+<img src="total_greeks_aos.png"></img>
+
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">.LBB19_4:
+	vaddps xmm0, xmm0, xmmword ptr [rdx + rsi]
+	add rsi, 16
+	cmp rcx, rsi
+	jne .LBB19_4
+	vmovups xmmword ptr [rax], xmm0
+	ret
 </script></code></pre>
 				</section>
 
