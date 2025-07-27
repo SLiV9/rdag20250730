@@ -3,10 +3,17 @@ use criterion::{
 };
 use rand::{seq::SliceRandom, Rng};
 
-use rdag20250730 as w;
+use rdag20250730::aos_worker::AosWorker;
 use rdag20250730::common::*;
+use rdag20250730::fast_worker::FastWorker;
+use rdag20250730::fxhash_worker::FxHashWorker;
+use rdag20250730::hashmap_worker::HashMapWorker;
+use rdag20250730::hotpath_worker::HotPathWorker;
+use rdag20250730::int_worker::IntWorker;
+use rdag20250730::naive_worker::NaiveWorker;
+use rdag20250730::soa_worker::SoaWorker;
 
-fn bench_one_worker(
+fn bench_worker(
     c: &mut Criterion,
     mut worker: impl Worker + Default,
 ) {
@@ -32,8 +39,7 @@ fn bench_one_worker(
         updates.shuffle(&mut rng);
         worker = Default::default();
         b.iter(|| {
-            let updates = std::hint::black_box(&updates);
-            for &update in updates {
+            for &update in std::hint::black_box(&updates) {
                 let (id, greeks) = update;
                 worker.update(id, greeks);
             }
@@ -42,8 +48,7 @@ fn bench_one_worker(
     g.bench_function("update", |b| {
         updates.shuffle(&mut rng);
         b.iter(|| {
-            let updates = std::hint::black_box(&updates);
-            for &update in updates {
+            for &update in std::hint::black_box(&updates) {
                 let (id, greeks) = update;
                 worker.update(id, greeks);
             }
@@ -57,40 +62,47 @@ fn bench_one_worker(
     });
 }
 
-fn bench_worker1(c: &mut Criterion) {
-    bench_one_worker(c, w::worker1::NaiveWorker::default())
+fn bench_naive_worker(c: &mut Criterion) {
+    bench_worker(c, NaiveWorker::default())
 }
 
-fn bench_worker2(c: &mut Criterion) {
-    bench_one_worker(
-        c,
-        w::worker2::HashMapWorker::default(),
-    )
+fn bench_hashmap_worker(c: &mut Criterion) {
+    bench_worker(c, HashMapWorker::default())
 }
 
-fn bench_worker3(c: &mut Criterion) {
-    bench_one_worker(c, w::worker3::Worker3::default())
+fn bench_fxhash_worker(c: &mut Criterion) {
+    bench_worker(c, FxHashWorker::default())
 }
 
-fn bench_worker4(c: &mut Criterion) {
-    bench_one_worker(c, w::worker4::Worker4::default())
+fn bench_soa_worker(c: &mut Criterion) {
+    bench_worker(c, SoaWorker::default())
 }
 
-fn bench_worker5(c: &mut Criterion) {
-    bench_one_worker(c, w::worker5::Worker5::default())
+fn bench_aos_worker(c: &mut Criterion) {
+    bench_worker(c, AosWorker::default())
 }
 
-fn bench_worker6(c: &mut Criterion) {
-    bench_one_worker(c, w::worker6::Worker6::default())
+fn bench_int_worker(c: &mut Criterion) {
+    bench_worker(c, IntWorker::default())
+}
+
+fn bench_fast_worker(c: &mut Criterion) {
+    bench_worker(c, FastWorker::default())
+}
+
+fn bench_hotpath_worker(c: &mut Criterion) {
+    bench_worker(c, HotPathWorker::default())
 }
 
 criterion_group!(
     benches,
-    bench_worker1,
-    bench_worker2,
-    bench_worker3,
-    bench_worker4,
-    bench_worker5,
-    bench_worker6,
+    bench_naive_worker,
+    bench_hashmap_worker,
+    bench_fxhash_worker,
+    bench_soa_worker,
+    bench_aos_worker,
+    bench_int_worker,
+    bench_fast_worker,
+    bench_hotpath_worker,
 );
 criterion_main!(benches);

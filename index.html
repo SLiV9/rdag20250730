@@ -417,19 +417,21 @@ pub trait Worker {
 
 				<section>
 <pre><code data-line-numbers class="language-rust">
-<script type="text/template">#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+<script type="text/template">use derive_more::{Add, AddAssign, Sum};
+
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Id(pub u32);
 
-#[derive(Clone, Copy, PartialEq, Add, AddAssign, Sum)]
+#[derive(Clone, Copy, Add, AddAssign, Sum)]
 pub struct Delta(pub f32);
 
-#[derive(Clone, Copy, PartialEq, Add, AddAssign, Sum)]
+#[derive(Clone, Copy, Add, AddAssign, Sum)]
 pub struct Gamma(pub f32);
 
-#[derive(Clone, Copy, PartialEq, Add, AddAssign, Sum)]
+#[derive(Clone, Copy, Add, AddAssign, Sum)]
 pub struct Theta(pub f32);
 
-#[derive(Clone, Copy, PartialEq, Add, AddAssign, Sum)]
+#[derive(Clone, Copy, Add, AddAssign, Sum)]
 pub struct Vega(pub f32);
 </script></code></pre>
 				</section>
@@ -497,137 +499,107 @@ impl Worker for HashMapworker {
 
 
 				<section>
-<pre><code data-line-numbers class="language-x86asm">
-<script type="text/template">NaiveWorker/insert
-    time:   [20.520 ms 20.654 ms 20.799 ms]
-NaiveWorker/update
-    time:   [20.370 ms 20.493 ms 20.620 ms]
-NaiveWorker/total_delta
-    time:   [8.6950 µs 8.7019 µs 8.7107 µs]
-NaiveWorker/total_greeks
-    time:   [34.737 µs 34.752 µs 34.769 µs]
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">fn bench_worker(c: &mut Criterion,
+    mut worker: impl Worker + Default
+) {
+    const N: usize = 10_000;
+    let mut rng = rand::rng();
+    let mut updates: Vec<(Id, Greeks)>;
+    // ...
+    g.bench_function("insert", |b| {
+        updates.shuffle(&mut rng);
+        worker = Default::default();
+        b.iter(|| {
+            for &update in std::hint::black_box(&updates) {
+                let (id, greeks) = update;
+                worker.update(id, greeks);
+            }
+        })
+    });
+    // ...
 </script></code></pre>
-<pre><code data-line-numbers class="language-x86asm">
-<script type="text/template">HashMapWorker/insert
-    time:   [121.42 µs 121.70 µs 122.05 µs]
-HashMapWorker/update
-    time:   [131.57 µs 132.42 µs 133.24 µs]
-HashMapWorker/total_delta
-    time:   [10.280 µs 10.324 µs 10.373 µs]
-HashMapWorker/total_greeks
-    time:   [9.5887 µs 9.6640 µs 9.7339 µs]
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">fn bench_worker(c: &mut Criterion,
+    mut worker: impl Worker + Default
+) {
+    // ...
+
+    g.bench_function("total_delta", |b| {
+        b.iter(|| worker.total_delta())
+    });
+    g.bench_function("total_greeks", |b| {
+        b.iter(|| worker.total_greeks())
+    });
+}
+
+fn bench_naive_worker(c: &mut Criterion) {
+    bench_worker(c, NaiveWorker::default())
+}
 </script></code></pre>
 				</section>
 
 
 				<section>
 <pre><code data-line-numbers class="language-x86asm">
-<script type="text/template">rdag20250730::worker3::Worker3/insert
-                        time:   [75.755 µs 75.878 µs 76.038 µs]
-                        change: [−5.0666% −4.1716% −3.3512%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 1 outliers among 100 measurements (1.00%)
-  1 (1.00%) high mild
-rdag20250730::worker3::Worker3/update
-                        time:   [96.908 µs 97.022 µs 97.139 µs]
-                        change: [−7.7930% −7.3458% −6.8742%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 11 outliers among 100 measurements (11.00%)
-  5 (5.00%) high mild
-  6 (6.00%) high severe
-rdag20250730::worker3::Worker3/total_delta
-                        time:   [8.9217 µs 8.9911 µs 9.0708 µs]
-                        change: [−2.1225% −1.2205% −0.2232%] (p = 0.01 < 0.05)
-                        Change within noise threshold.
-Found 1 outliers among 100 measurements (1.00%)
-  1 (1.00%) high severe
-rdag20250730::worker3::Worker3/total_greeks
-                        time:   [34.729 µs 34.746 µs 34.767 µs]
-                        change: [−5.6279% −5.1489% −4.6717%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 19 outliers among 100 measurements (19.00%)
-  5 (5.00%) high mild
-  14 (14.00%) high severe
+<script type="text/template">NaiveWorker/insert
+                    time:   [23.015 ms 23.036 ms 23.059 ms]
+NaiveWorker/update
+                    time:   [23.086 ms 23.109 ms 23.135 ms]
+NaiveWorker/total_delta
+                    time:   [9.1201 µs 9.1295 µs 9.1403 µs]
+NaiveWorker/total_greeks
+                    time:   [36.419 µs 36.445 µs 36.474 µs]
+</script></code></pre>
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">HashMapWorker/insert
+                    time:   [126.84 µs 126.97 µs 127.13 µs]
+HashMapWorker/update
+                    time:   [125.33 µs 125.41 µs 125.49 µs]
+HashMapWorker/total_delta
+                    time:   [11.332 µs 11.393 µs 11.457 µs]
+HashMapWorker/total_greeks
+                    time:   [9.4612 µs 9.5135 µs 9.5685 µs]
+</script></code></pre>
+				</section>
 
-rdag20250730::worker4::Worker4/insert
-                        time:   [66.159 µs 66.384 µs 66.677 µs]
-                        change: [−0.6630% +0.1555% +0.9848%] (p = 0.72 > 0.05)
-                        No change in performance detected.
-Found 1 outliers among 100 measurements (1.00%)
-  1 (1.00%) high mild
-rdag20250730::worker4::Worker4/update
-                        time:   [77.957 µs 78.099 µs 78.246 µs]
-                        change: [−6.0547% −5.5202% −4.9773%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 10 outliers among 100 measurements (10.00%)
-  6 (6.00%) high mild
-  4 (4.00%) high severe
-rdag20250730::worker4::Worker4/total_delta
-                        time:   [8.6920 µs 8.6958 µs 8.7005 µs]
-                        change: [−4.9034% −4.1827% −3.1874%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 20 outliers among 100 measurements (20.00%)
-  2 (2.00%) high mild
-  18 (18.00%) high severe
-rdag20250730::worker4::Worker4/total_greeks
-                        time:   [8.6894 µs 8.6935 µs 8.6987 µs]
-                        change: [−6.7104% −6.2426% −5.7615%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 17 outliers among 100 measurements (17.00%)
-  5 (5.00%) high mild
-  12 (12.00%) high severe
 
-rdag20250730::worker5::Worker5/insert
-                        time:   [98.466 µs 99.127 µs 99.777 µs]
-                        change: [−3.1861% −2.4507% −1.6765%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 6 outliers among 100 measurements (6.00%)
-  2 (2.00%) high mild
-  4 (4.00%) high severe
-rdag20250730::worker5::Worker5/update
-                        time:   [121.60 µs 121.98 µs 122.42 µs]
-                        change: [+2.0636% +2.9583% +3.6980%] (p = 0.00 < 0.05)
-                        Performance has regressed.
-rdag20250730::worker5::Worker5/total_delta
-                        time:   [301.14 ns 303.68 ns 306.48 ns]
-                        change: [−3.9743% −2.9437% −1.6530%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 1 outliers among 100 measurements (1.00%)
-  1 (1.00%) high severe
-rdag20250730::worker5::Worker5/total_greeks
-                        time:   [1.2403 µs 1.2431 µs 1.2462 µs]
-                        change: [−15.279% −14.710% −14.009%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 5 outliers among 100 measurements (5.00%)
-  1 (1.00%) high mild
-  4 (4.00%) high severe
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">use fxhash::FxHashMap;
 
-rdag20250730::worker6::Worker6/insert
-                        time:   [77.657 µs 78.133 µs 78.618 µs]
-                        change: [−1.5719% −0.7923% −0.0032%] (p = 0.05 < 0.05)
-                        Change within noise threshold.
-Found 6 outliers among 100 measurements (6.00%)
-  5 (5.00%) high mild
-  1 (1.00%) high severe
-rdag20250730::worker6::Worker6/update
-                        time:   [106.56 µs 107.22 µs 107.89 µs]
-                        change: [+2.6304% +3.4756% +4.3140%] (p = 0.00 < 0.05)
-                        Performance has regressed.
-Found 1 outliers among 100 measurements (1.00%)
-  1 (1.00%) high severe
-rdag20250730::worker6::Worker6/total_delta
-                        time:   [415.57 ns 418.34 ns 421.04 ns]
-                        change: [−7.3813% −6.7608% −6.1596%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 1 outliers among 100 measurements (1.00%)
-  1 (1.00%) high severe
-rdag20250730::worker6::Worker6/total_greeks
-                        time:   [1.7169 µs 1.7214 µs 1.7271 µs]
-                        change: [−11.176% −10.572% −10.006%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 8 outliers among 100 measurements (8.00%)
-  6 (6.00%) high mild
-  2 (2.00%) high severe
+#[derive(Default)]
+pub struct FxHashWorker {
+    greeks: FxHashMap<Id, Greeks>,
+}
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">HashMapWorker/insert
+                    time:   [126.84 µs 126.97 µs 127.13 µs]
+HashMapWorker/update
+                    time:   [125.33 µs 125.41 µs 125.49 µs]
+HashMapWorker/total_delta
+                    time:   [11.332 µs 11.393 µs 11.457 µs]
+HashMapWorker/total_greeks
+                    time:   [9.4612 µs 9.5135 µs 9.5685 µs]
+</script></code></pre>
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">FxHashWorker/insert
+                    time:   [52.554 µs 52.612 µs 52.673 µs]
+FxHashWorker/update
+                    time:   [53.654 µs 53.842 µs 54.045 µs]
+FxHashWorker/total_delta
+                    time:   [9.2757 µs 9.2938 µs 9.3141 µs]
+FxHashWorker/total_greeks
+                    time:   [9.2781 µs 9.2893 µs 9.3029 µs]
 </script></code></pre>
 				</section>
 

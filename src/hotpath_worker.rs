@@ -1,22 +1,33 @@
 use std::collections::hash_map;
-use std::iter::Sum;
-use std::ops::Add;
-use std::ops::AddAssign;
 
 use fxhash::FxHashMap;
 
 use crate::common::*;
+use crate::fast_worker::fast_sum;
 
-#[derive(Default)]
-pub struct Worker6 {
+pub struct HotPathWorker {
     instrument_offsets: FxHashMap<Id, usize>,
     deltas: Vec<Delta>,
     gammas: Vec<Gamma>,
     thetas: Vec<Theta>,
     vegas: Vec<Vega>,
+    cached_total_delta: Delta,
 }
 
-impl Worker for Worker6 {
+impl Default for HotPathWorker {
+    fn default() -> HotPathWorker {
+        HotPathWorker {
+            instrument_offsets: Default::default(),
+            deltas: Default::default(),
+            gammas: Default::default(),
+            thetas: Default::default(),
+            vegas: Default::default(),
+            cached_total_delta: Delta(0.0),
+        }
+    }
+}
+
+impl Worker for HotPathWorker {
     fn update(&mut self, id: Id, greeks: Greeks) {
         match self.instrument_offsets.entry(id) {
             hash_map::Entry::Occupied(occupied_entry) => {
@@ -35,10 +46,12 @@ impl Worker for Worker6 {
                 self.vegas.push(greeks.vega);
             }
         }
+        self.cached_total_delta =
+            fast_sum(Delta(0.0), &self.deltas[..]);
     }
 
     fn total_delta(&self) -> Delta {
-        fast_sum(Delta(0.0), &self.deltas[..])
+        self.cached_total_delta
     }
 
     fn total_gamma(&self) -> Gamma {
@@ -61,23 +74,4 @@ impl Worker for Worker6 {
             vega: self.total_vega(),
         }
     }
-}
-
-fn fast_sum<T>(zero_value: T, mut values: &[T]) -> T
-where
-    T: Copy + Add<Output = T> + AddAssign + Sum,
-{
-    const CHUNK_SIZE: usize = 128;
-    let mut sums = [zero_value; CHUNK_SIZE];
-    while let Some(chunk) = values.first_chunk() {
-        let chunk: &[T; CHUNK_SIZE] = chunk;
-        for i in 0..CHUNK_SIZE {
-            sums[i] += chunk[i];
-        }
-        values = &values[CHUNK_SIZE..];
-    }
-    for (i, v) in values.iter().enumerate() {
-        sums[i] += *v;
-    }
-    sums.iter().copied().sum()
 }

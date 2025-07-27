@@ -5,12 +5,12 @@ use fxhash::FxHashMap;
 use crate::common::*;
 
 #[derive(Default)]
-pub struct Worker4 {
+pub struct AosWorker {
     instrument_offsets: FxHashMap<Id, usize>,
     greeks: Vec<Greeks>,
 }
 
-impl Worker for Worker4 {
+impl Worker for AosWorker {
     fn update(&mut self, id: Id, greeks: Greeks) {
         match self.instrument_offsets.entry(id) {
             hash_map::Entry::Occupied(occupied_entry) => {

@@ -5,7 +5,7 @@ use fxhash::FxHashMap;
 use crate::common::*;
 
 #[derive(Default)]
-pub struct Worker3 {
+pub struct SoaWorker {
     instrument_offsets: FxHashMap<Id, usize>,
     deltas: Vec<Delta>,
     gammas: Vec<Gamma>,
@@ -13,7 +13,7 @@ pub struct Worker3 {
     vegas: Vec<Vega>,
 }
 
-impl Worker for Worker3 {
+impl Worker for SoaWorker {
     fn update(&mut self, id: Id, greeks: Greeks) {
         match self.instrument_offsets.entry(id) {
             hash_map::Entry::Occupied(occupied_entry) => {

@@ -5,7 +5,7 @@ use fxhash::FxHashMap;
 use crate::common::*;
 
 #[derive(Default)]
-pub struct Worker5 {
+pub struct IntWorker {
     instrument_offsets: FxHashMap<Id, usize>,
     deltas: Vec<i32>,
     gammas: Vec<i32>,
@@ -13,7 +13,7 @@ pub struct Worker5 {
     vegas: Vec<i32>,
 }
 
-impl Worker for Worker5 {
+impl Worker for IntWorker {
     fn update(&mut self, id: Id, greeks: Greeks) {
         let delta = int_from_greek(greeks.delta.0);
         let gamma = int_from_greek(greeks.gamma.0);
