@@ -112,9 +112,8 @@ LEFT JOIN execution.orders o
 							- 1 second is a very busy exchange
 							- 250 ms is the average human reaction speed
 							- 65 ms for light to cross the globe
-							- 1 ms
-							- 100 us
-							- 10 us
+							- 10 ms every second means 1% already lost
+							- 20 us is a lot if you do it 1000x in a row
 							- 1 us for a thread context switch
 							- 100ns is too slow to compete with FPGAs
 					</textarea>
@@ -605,9 +604,261 @@ FxHashWorker/total_greeks
 
 
 				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">pub struct AosWorker {
+    instrument_offsets: FxHashMap<Id, usize>,
+    greeks: Vec<Greeks>,
+}
+
+impl Worker for AosWorker {
+    fn update(&mut self, id: Id, greeks: Greeks) {
+        match self.instrument_offsets.entry(id) {
+            hash_map::Entry::Occupied(occupied_entry) => {
+                let offset = *occupied_entry.get();
+                self.greeks[offset] = greeks;
+            }
+            hash_map::Entry::Vacant(vacant_entry) => {
+                vacant_entry.insert(self.greeks.len());
+                self.greeks.push(greeks);
+            }
+        }
+    }
+</script></code></pre>
+				</section>
+
+
+				<section>
 <pre><code data-line-numbers class="language-x86asm">
-<script type="text/template">	.p2align	4
-.LBB40_2:
+<script type="text/template">FxHashWorker/insert
+                    time:   [52.554 µs 52.612 µs 52.673 µs]
+FxHashWorker/update
+                    time:   [53.654 µs 53.842 µs 54.045 µs]
+FxHashWorker/total_delta
+                    time:   [9.2757 µs 9.2938 µs 9.3141 µs]
+FxHashWorker/total_greeks
+                    time:   [9.2781 µs 9.2893 µs 9.3029 µs]
+</script></code></pre>
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">AosWorker/insert
+                    time:   [65.438 µs 65.521 µs 65.609 µs]
+AosWorker/update
+                    time:   [76.309 µs 76.474 µs 76.649 µs]
+AosWorker/total_delta
+                    time:   [8.7238 µs 8.7373 µs 8.7538 µs]
+AosWorker/total_greeks
+                    time:   [8.7125 µs 8.7172 µs 8.7223 µs]
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">#[derive(Default)]
+pub struct SoaWorker {
+    instrument_offsets: FxHashMap<Id, usize>,
+    deltas: Vec<Delta>,
+    gammas: Vec<Gamma>,
+    thetas: Vec<Theta>,
+    vegas: Vec<Vega>,
+}
+
+impl Worker for SoaWorker {
+    // ...
+    fn total_delta(&self) -> Delta {
+        self.deltas.iter().copied().sum()
+    }
+    // ...
+}
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">AosWorker/insert
+                    time:   [65.438 µs 65.521 µs 65.609 µs]
+AosWorker/update
+                    time:   [76.309 µs 76.474 µs 76.649 µs]
+AosWorker/total_delta
+                    time:   [8.7238 µs 8.7373 µs 8.7538 µs]
+AosWorker/total_greeks
+                    time:   [8.7125 µs 8.7172 µs 8.7223 µs]
+</script></code></pre>
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">SoaWorker/insert
+                    time:   [81.376 µs 81.485 µs 81.615 µs]
+SoaWorker/update
+                    time:   [106.46 µs 106.63 µs 106.81 µs]
+SoaWorker/total_delta
+                    time:   [8.7190 µs 8.7314 µs 8.7452 µs]
+SoaWorker/total_greeks
+                    time:   [34.833 µs 34.868 µs 34.910 µs]
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">impl Worker for SoaWorker {
+    fn update(&mut self, id: Id, greeks: Greeks) {
+        match self.instrument_offsets.entry(id) {
+            hash_map::Entry::Occupied(occupied_entry) => {
+                let offset = *occupied_entry.get();
+                self.deltas[offset] = greeks.delta;
+                self.gammas[offset] = greeks.gamma;
+                self.thetas[offset] = greeks.theta;
+                self.vegas[offset] = greeks.vega;
+            }
+            hash_map::Entry::Vacant(vacant_entry) => {
+                let offset = self.deltas.len();
+                vacant_entry.insert(offset);
+                self.deltas.push(greeks.delta);
+                self.gammas.push(greeks.gamma);
+                self.thetas.push(greeks.theta);
+                self.vegas.push(greeks.vega);
+            }
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">    fn total_delta(&self) -> Delta {
+        self.deltas.iter().copied().sum()
+    }
+</script></code></pre>
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">.LBB57_5:
+	vaddss xmm0, xmm0, dword ptr [rcx + 4*rsi]
+	vaddss xmm0, xmm0, dword ptr [rcx + 4*rsi + 4]
+	vaddss xmm0, xmm0, dword ptr [rcx + 4*rsi + 8]
+	vaddss xmm0, xmm0, dword ptr [rcx + 4*rsi + 12]
+	vaddss xmm0, xmm0, dword ptr [rcx + 4*rsi + 16]
+	vaddss xmm0, xmm0, dword ptr [rcx + 4*rsi + 20]
+	vaddss xmm0, xmm0, dword ptr [rcx + 4*rsi + 24]
+	vaddss xmm0, xmm0, dword ptr [rcx + 4*rsi + 28]
+	add rsi, 8
+	cmp rdx, rsi
+	jne .LBB57_5
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">#[derive(Default)]
+pub struct IntWorker {
+    instrument_offsets: FxHashMap<Id, usize>,
+    deltas: Vec<i32>,
+    gammas: Vec<i32>,
+    thetas: Vec<i32>,
+    vegas: Vec<i32>,
+}
+
+fn int_from_greek(greek: f32) -> i32 {
+    (greek * 1e6) as i32
+}
+
+fn greek_from_int(value: i32) -> f32 {
+    value as f32 * 1e-6
+}
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">impl Worker for IntWorker {
+    fn update(&mut self, id: Id, greeks: Greeks) {
+        let delta = int_from_greek(greeks.delta.0);
+        let gamma = int_from_greek(greeks.gamma.0);
+        let theta = int_from_greek(greeks.theta.0);
+        let vega = int_from_greek(greeks.vega.0);
+        match self.instrument_offsets.entry(id) {
+            hash_map::Entry::Occupied(occupied_entry) => {
+                let offset = *occupied_entry.get();
+                self.deltas[offset] = delta;
+                self.gammas[offset] = gamma;
+                self.thetas[offset] = theta;
+                self.vegas[offset] = vega;
+            }
+            hash_map::Entry::Vacant(vacant_entry) => {
+            	// ...
+            }
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">    fn total_delta(&self) -> Delta {
+        let sum: i32 = self.deltas.iter().copied().sum();
+        Delta(greek_from_int(sum))
+    }
+</script></code></pre>
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">.LBB43_8:
+	vpaddd ymm0, ymm0, ymmword ptr [rcx + 4*rsi]
+	vpaddd ymm1, ymm1, ymmword ptr [rcx + 4*rsi + 32]
+	vpaddd ymm2, ymm2, ymmword ptr [rcx + 4*rsi + 64]
+	vpaddd ymm3, ymm3, ymmword ptr [rcx + 4*rsi + 96]
+	add rsi, 32
+	cmp rdx, rsi
+	jne .LBB43_8
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">SoaWorker/insert
+                    time:   [81.376 µs 81.485 µs 81.615 µs]
+SoaWorker/update
+                    time:   [106.46 µs 106.63 µs 106.81 µs]
+SoaWorker/total_delta
+                    time:   [8.7190 µs 8.7314 µs 8.7452 µs]
+SoaWorker/total_greeks
+                    time:   [34.833 µs 34.868 µs 34.910 µs]
+</script></code></pre>
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">IntWorker/insert
+                    time:   [101.33 µs 101.53 µs 101.74 µs]
+IntWorker/update
+                    time:   [120.79 µs 120.93 µs 121.10 µs]
+IntWorker/total_delta
+                    time:   [299.43 ns 300.69 ns 302.06 ns]
+IntWorker/total_greeks
+                    time:   [1.2313 µs 1.2329 µs 1.2345 µs]
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">#[inline]
+pub fn fast_sum(mut values: &[f32]) -> f32
+{
+    const CHUNK_SIZE: usize = 128;
+    let mut sums = [0.0; CHUNK_SIZE];
+    while let Some(chunk) = values.first_chunk() {
+        let chunk: &[f32; CHUNK_SIZE] = chunk;
+        for i in 0..CHUNK_SIZE {
+            sums[i] += chunk[i];
+        }
+        values = &values[CHUNK_SIZE..];
+    }
+    for (i, v) in values.iter().enumerate() {
+        sums[i] += *v;
+    }
+    sums.iter().copied().sum()
+}
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">.LBB40_2:
 	vaddps ymm15, ymm15, ymmword ptr [rax]
 	vaddps ymm14, ymm14, ymmword ptr [rax + 32]
 	vaddps ymm13, ymm13, ymmword ptr [rax + 64]
@@ -623,6 +874,98 @@ FxHashWorker/total_greeks
 </script></code></pre>
 				</section>
 
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">#[derive(Default)]
+pub struct FastWorker {
+    instrument_offsets: FxHashMap<Id, usize>,
+    deltas: Vec<Delta>,
+    gammas: Vec<Gamma>,
+    thetas: Vec<Theta>,
+    vegas: Vec<Vega>,
+}
+
+impl Worker for FastWorker {
+    // ...
+    fn total_delta(&self) -> Delta {
+        fast_sum(Delta(0.0), &self.deltas[..])
+    }
+    // ...
+}
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">SoaWorker/insert
+                    time:   [81.376 µs 81.485 µs 81.615 µs]
+SoaWorker/update
+                    time:   [106.46 µs 106.63 µs 106.81 µs]
+SoaWorker/total_delta
+                    time:   [8.7190 µs 8.7314 µs 8.7452 µs]
+SoaWorker/total_greeks
+                    time:   [34.833 µs 34.868 µs 34.910 µs]
+</script></code></pre>
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">FastWorker/insert
+                    time:   [82.068 µs 82.509 µs 82.942 µs]
+FastWorker/update
+                    time:   [107.62 µs 107.75 µs 107.88 µs]
+FastWorker/total_delta
+                    time:   [409.68 ns 410.82 ns 412.00 ns]
+FastWorker/total_greeks
+                    time:   [1.7260 µs 1.7305 µs 1.7363 µs]
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">FastWorker/insert
+                    time:   [82.068 µs 82.509 µs 82.942 µs]
+FastWorker/update
+                    time:   [107.62 µs 107.75 µs 107.88 µs]
+FastWorker/total_delta
+                    time:   [409.68 ns 410.82 ns 412.00 ns]
+FastWorker/total_greeks
+                    time:   [1.7260 µs 1.7305 µs 1.7363 µs]
+</script></code></pre>
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">HotPathWorker/insert
+                    time:   [3.8947 ms 3.9002 ms 3.9071 ms]
+HotPathWorker/update
+                    time:   [4.0070 ms 4.0150 ms 4.0249 ms]
+HotPathWorker/total_delta
+                    time:   [219.07 ps 219.31 ps 219.58 ps]
+HotPathWorker/total_greeks
+                    time:   [1.2767 µs 1.2787 µs 1.2811 µs]
+</script></code></pre>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">impl Worker for HotPathWorker {
+    fn update(&mut self, id: Id, greeks: Greeks) {
+        match self.instrument_offsets.entry(id) {
+            hash_map::Entry::Occupied(occupied_entry) => {
+            	// ...
+            }
+            hash_map::Entry::Vacant(vacant_entry) => {
+            	// ...
+            }
+        }
+        self.cached_total_delta =
+            fast_sum(Delta(0.0), &self.deltas[..]);
+    }
+
+    fn total_delta(&self) -> Delta {
+        self.cached_total_delta
+    }
+</script></code></pre>
+				</section>
 
 
 				<section data-markdown>

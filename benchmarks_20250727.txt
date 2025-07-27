@@ -173,3 +173,559 @@ rdag20250730::hotpath_worker::HotPathWorker/total_greeks
 Found 2 outliers among 100 measurements (2.00%)
   1 (1.00%) high mild
   1 (1.00%) high severe
+
+
+
+
+sander@linuxmint ~/Documents/Rust/rdag20250730 $ cargo bench
+   Compiling rdag20250730 v0.1.0 (/home/sander/Documents/Rust/rdag20250730)
+    Finished `bench` profile [optimized] target(s) in 2.46s
+     Running unittests src/lib.rs (target/release/deps/rdag20250730-b8186d1a53b43ed2)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running benches/bench_workers.rs (target/release/deps/bench_workers-68347463fa13407f)
+Gnuplot not found, using plotters backend
+rdag20250730::naive_worker::NaiveWorker/insert
+                        time:   [21.035 ms 21.056 ms 21.078 ms]
+                        change: [−8.7146% −8.5951% −8.4743%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+rdag20250730::naive_worker::NaiveWorker/update
+                        time:   [21.064 ms 21.083 ms 21.102 ms]
+                        change: [−8.8946% −8.7676% −8.6426%] (p = 0.00 < 0.05)
+                        Performance has improved.
+rdag20250730::naive_worker::NaiveWorker/total_delta
+                        time:   [9.1263 µs 9.1341 µs 9.1420 µs]
+                        change: [−0.4571% +0.1885% +0.9876%] (p = 0.67 > 0.05)
+                        No change in performance detected.
+Found 7 outliers among 100 measurements (7.00%)
+  2 (2.00%) high mild
+  5 (5.00%) high severe
+rdag20250730::naive_worker::NaiveWorker/total_greeks
+                        time:   [36.459 µs 36.484 µs 36.509 µs]
+                        change: [−0.1940% +0.0801% +0.3216%] (p = 0.56 > 0.05)
+                        No change in performance detected.
+Found 6 outliers among 100 measurements (6.00%)
+  4 (4.00%) high mild
+  2 (2.00%) high severe
+
+rdag20250730::hashmap_worker::HashMapWorker/insert
+                        time:   [127.48 µs 127.57 µs 127.67 µs]
+                        change: [+0.0676% +0.5290% +1.0078%] (p = 0.02 < 0.05)
+                        Change within noise threshold.
+Found 8 outliers among 100 measurements (8.00%)
+  2 (2.00%) high mild
+  6 (6.00%) high severe
+rdag20250730::hashmap_worker::HashMapWorker/update
+                        time:   [131.36 µs 131.43 µs 131.51 µs]
+                        change: [+4.4145% +4.7241% +5.0173%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 7 outliers among 100 measurements (7.00%)
+  4 (4.00%) high mild
+  3 (3.00%) high severe
+rdag20250730::hashmap_worker::HashMapWorker/total_delta
+                        time:   [10.503 µs 10.512 µs 10.521 µs]
+                        change: [−8.1082% −7.1096% −6.1011%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 5 outliers among 100 measurements (5.00%)
+  3 (3.00%) high mild
+  2 (2.00%) high severe
+rdag20250730::hashmap_worker::HashMapWorker/total_greeks
+                        time:   [8.9131 µs 8.9751 µs 9.0516 µs]
+                        change: [−5.5358% −3.7895% −1.5367%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 3 outliers among 100 measurements (3.00%)
+  2 (2.00%) high mild
+  1 (1.00%) high severe
+
+rdag20250730::fxhash_worker::FxHashWorker/insert
+                        time:   [70.787 µs 70.866 µs 70.956 µs]
+                        change: [+34.215% +35.148% +36.199%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 7 outliers among 100 measurements (7.00%)
+  1 (1.00%) high mild
+  6 (6.00%) high severe
+rdag20250730::fxhash_worker::FxHashWorker/update
+                        time:   [69.085 µs 69.160 µs 69.244 µs]
+                        change: [+28.309% +28.865% +29.492%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 13 outliers among 100 measurements (13.00%)
+  8 (8.00%) high mild
+  5 (5.00%) high severe
+rdag20250730::fxhash_worker::FxHashWorker/total_delta
+                        time:   [9.5124 µs 9.5232 µs 9.5372 µs]
+                        change: [+2.2937% +2.6931% +3.1479%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 15 outliers among 100 measurements (15.00%)
+  7 (7.00%) high mild
+  8 (8.00%) high severe
+rdag20250730::fxhash_worker::FxHashWorker/total_greeks
+                        time:   [8.8059 µs 8.8170 µs 8.8290 µs]
+                        change: [−4.9763% −4.6639% −4.3231%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 14 outliers among 100 measurements (14.00%)
+  8 (8.00%) high mild
+  6 (6.00%) high severe
+
+rdag20250730::nohash_worker::NoHashWorker/insert
+                        time:   [59.721 µs 59.773 µs 59.833 µs]
+                        change: [−8.8250% −7.4187% −5.8120%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 15 outliers among 100 measurements (15.00%)
+  1 (1.00%) high mild
+  14 (14.00%) high severe
+rdag20250730::nohash_worker::NoHashWorker/update
+                        time:   [59.409 µs 59.542 µs 59.701 µs]
+                        change: [−8.5083% −8.1436% −7.7931%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 10 outliers among 100 measurements (10.00%)
+  4 (4.00%) high mild
+  6 (6.00%) high severe
+rdag20250730::nohash_worker::NoHashWorker/total_delta
+                        time:   [8.7604 µs 8.7675 µs 8.7758 µs]
+                        change: [−5.9799% −4.7558% −3.9093%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 15 outliers among 100 measurements (15.00%)
+  8 (8.00%) high mild
+  7 (7.00%) high severe
+rdag20250730::nohash_worker::NoHashWorker/total_greeks
+                        time:   [8.7616 µs 8.7702 µs 8.7810 µs]
+                        change: [−4.2715% −3.9027% −3.4303%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 17 outliers among 100 measurements (17.00%)
+  11 (11.00%) high mild
+  6 (6.00%) high severe
+
+rdag20250730::soa_worker::SoaWorker/insert
+                        time:   [81.376 µs 81.485 µs 81.615 µs]
+                        change: [−4.4500% −3.6915% −2.9508%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 16 outliers among 100 measurements (16.00%)
+  8 (8.00%) high mild
+  8 (8.00%) high severe
+rdag20250730::soa_worker::SoaWorker/update
+                        time:   [106.46 µs 106.63 µs 106.81 µs]
+                        change: [−3.3374% −2.1684% −1.3460%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 6 outliers among 100 measurements (6.00%)
+  6 (6.00%) high severe
+rdag20250730::soa_worker::SoaWorker/total_delta
+                        time:   [8.7190 µs 8.7314 µs 8.7452 µs]
+                        change: [−4.0450% −3.7154% −3.3186%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 8 outliers among 100 measurements (8.00%)
+  3 (3.00%) high mild
+  5 (5.00%) high severe
+rdag20250730::soa_worker::SoaWorker/total_greeks
+                        time:   [34.833 µs 34.868 µs 34.910 µs]
+                        change: [−4.2128% −3.8656% −3.4058%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 17 outliers among 100 measurements (17.00%)
+  10 (10.00%) high mild
+  7 (7.00%) high severe
+
+rdag20250730::aos_worker::AosWorker/insert
+                        time:   [65.438 µs 65.521 µs 65.609 µs]
+                        change: [−4.4855% −3.9673% −3.3190%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 12 outliers among 100 measurements (12.00%)
+  6 (6.00%) high mild
+  6 (6.00%) high severe
+rdag20250730::aos_worker::AosWorker/update
+                        time:   [76.309 µs 76.474 µs 76.649 µs]
+                        change: [−5.4645% −5.1171% −4.7589%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 12 outliers among 100 measurements (12.00%)
+  11 (11.00%) high mild
+  1 (1.00%) high severe
+rdag20250730::aos_worker::AosWorker/total_delta
+                        time:   [8.7238 µs 8.7373 µs 8.7538 µs]
+                        change: [−4.2863% −3.8198% −3.2920%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 8 outliers among 100 measurements (8.00%)
+  2 (2.00%) high mild
+  6 (6.00%) high severe
+rdag20250730::aos_worker::AosWorker/total_greeks
+                        time:   [8.7125 µs 8.7172 µs 8.7223 µs]
+                        change: [−4.3500% −4.0305% −3.6630%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 14 outliers among 100 measurements (14.00%)
+  6 (6.00%) high mild
+  8 (8.00%) high severe
+
+rdag20250730::int_worker::IntWorker/insert
+                        time:   [101.33 µs 101.53 µs 101.74 µs]
+                        change: [−3.4593% −2.8892% −2.2618%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 7 outliers among 100 measurements (7.00%)
+  2 (2.00%) high mild
+  5 (5.00%) high severe
+rdag20250730::int_worker::IntWorker/update
+                        time:   [120.79 µs 120.93 µs 121.10 µs]
+                        change: [−6.4331% −6.0753% −5.6747%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 7 outliers among 100 measurements (7.00%)
+  3 (3.00%) high mild
+  4 (4.00%) high severe
+rdag20250730::int_worker::IntWorker/total_delta
+                        time:   [299.43 ns 300.69 ns 302.06 ns]
+                        change: [−5.0980% −4.4629% −3.7917%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 6 outliers among 100 measurements (6.00%)
+  3 (3.00%) high mild
+  3 (3.00%) high severe
+rdag20250730::int_worker::IntWorker/total_greeks
+                        time:   [1.2313 µs 1.2329 µs 1.2345 µs]
+                        change: [−14.950% −14.022% −12.133%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 10 outliers among 100 measurements (10.00%)
+  3 (3.00%) high mild
+  7 (7.00%) high severe
+
+rdag20250730::fast_worker::FastWorker/insert
+                        time:   [82.068 µs 82.509 µs 82.942 µs]
+                        change: [−5.4001% −4.8068% −4.0774%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 14 outliers among 100 measurements (14.00%)
+  9 (9.00%) high mild
+  5 (5.00%) high severe
+rdag20250730::fast_worker::FastWorker/update
+                        time:   [107.62 µs 107.75 µs 107.88 µs]
+                        change: [−6.5156% −6.1333% −5.7443%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 6 outliers among 100 measurements (6.00%)
+  2 (2.00%) high mild
+  4 (4.00%) high severe
+rdag20250730::fast_worker::FastWorker/total_delta
+                        time:   [409.68 ns 410.82 ns 412.00 ns]
+                        change: [−10.151% −9.6453% −9.0141%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 5 outliers among 100 measurements (5.00%)
+  2 (2.00%) high mild
+  3 (3.00%) high severe
+rdag20250730::fast_worker::FastWorker/total_greeks
+                        time:   [1.7260 µs 1.7305 µs 1.7363 µs]
+                        change: [−13.649% −13.315% −12.918%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 10 outliers among 100 measurements (10.00%)
+  3 (3.00%) high mild
+  7 (7.00%) high severe
+
+rdag20250730::hotpath_worker::HotPathWorker/insert
+                        time:   [3.8947 ms 3.9002 ms 3.9071 ms]
+                        change: [−11.971% −11.810% −11.613%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 10 outliers among 100 measurements (10.00%)
+  4 (4.00%) high mild
+  6 (6.00%) high severe
+rdag20250730::hotpath_worker::HotPathWorker/update
+                        time:   [4.0070 ms 4.0150 ms 4.0249 ms]
+                        change: [−13.099% −12.885% −12.659%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 11 outliers among 100 measurements (11.00%)
+  5 (5.00%) high mild
+  6 (6.00%) high severe
+rdag20250730::hotpath_worker::HotPathWorker/total_delta
+                        time:   [219.07 ps 219.31 ps 219.58 ps]
+                        change: [−4.2564% −3.8736% −3.4108%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 8 outliers among 100 measurements (8.00%)
+  4 (4.00%) high mild
+  4 (4.00%) high severe
+rdag20250730::hotpath_worker::HotPathWorker/total_greeks
+                        time:   [1.2767 µs 1.2787 µs 1.2811 µs]
+                        change: [−11.830% −10.834% −9.8758%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 19 outliers among 100 measurements (19.00%)
+  8 (8.00%) high mild
+  11 (11.00%) high severe
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+sander@linuxmint ~/Documents/Rust/rdag20250730 $ cargo bench
+    Finished `bench` profile [optimized] target(s) in 0.07s
+     Running unittests src/lib.rs (target/release/deps/rdag20250730-b8186d1a53b43ed2)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running benches/bench_workers.rs (target/release/deps/bench_workers-68347463fa13407f)
+Gnuplot not found, using plotters backend
+rdag20250730::naive_worker::NaiveWorker/insert
+                        time:   [20.228 ms 20.251 ms 20.278 ms]
+                        change: [−3.9718% −3.8226% −3.6564%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 9 outliers among 100 measurements (9.00%)
+  4 (4.00%) high mild
+  5 (5.00%) high severe
+rdag20250730::naive_worker::NaiveWorker/update
+                        time:   [20.248 ms 20.277 ms 20.310 ms]
+                        change: [−3.9864% −3.8211% −3.6345%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 13 outliers among 100 measurements (13.00%)
+  8 (8.00%) high mild
+  5 (5.00%) high severe
+rdag20250730::naive_worker::NaiveWorker/total_delta
+                        time:   [8.7195 µs 8.7294 µs 8.7412 µs]
+                        change: [−5.3002% −4.4520% −3.7613%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 17 outliers among 100 measurements (17.00%)
+  11 (11.00%) high mild
+  6 (6.00%) high severe
+rdag20250730::naive_worker::NaiveWorker/total_greeks
+                        time:   [34.857 µs 34.891 µs 34.939 µs]
+                        change: [−4.3301% −3.9560% −3.5288%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 14 outliers among 100 measurements (14.00%)
+  6 (6.00%) high mild
+  8 (8.00%) high severe
+
+rdag20250730::hashmap_worker::HashMapWorker/insert
+                        time:   [124.53 µs 124.88 µs 125.27 µs]
+                        change: [−1.9268% −0.6472% +0.6603%] (p = 0.31 > 0.05)
+                        No change in performance detected.
+Found 15 outliers among 100 measurements (15.00%)
+  7 (7.00%) high mild
+  8 (8.00%) high severe
+rdag20250730::hashmap_worker::HashMapWorker/update
+                        time:   [142.95 µs 143.15 µs 143.38 µs]
+                        change: [+9.0397% +9.5134% +10.079%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 7 outliers among 100 measurements (7.00%)
+  5 (5.00%) high mild
+  2 (2.00%) high severe
+rdag20250730::hashmap_worker::HashMapWorker/total_delta
+                        time:   [9.9544 µs 9.9709 µs 9.9895 µs]
+                        change: [−6.0668% −5.1936% −4.4938%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 7 outliers among 100 measurements (7.00%)
+  1 (1.00%) high mild
+  6 (6.00%) high severe
+rdag20250730::hashmap_worker::HashMapWorker/total_greeks
+                        time:   [8.7754 µs 8.7824 µs 8.7908 µs]
+                        change: [−5.6058% −3.8177% −2.3661%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 16 outliers among 100 measurements (16.00%)
+  9 (9.00%) high mild
+  7 (7.00%) high severe
+
+rdag20250730::fxhash_worker::FxHashWorker/insert
+                        time:   [92.208 µs 92.270 µs 92.346 µs]
+                        change: [+28.906% +29.988% +30.943%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 14 outliers among 100 measurements (14.00%)
+  3 (3.00%) high mild
+  11 (11.00%) high severe
+rdag20250730::fxhash_worker::FxHashWorker/update
+                        time:   [91.809 µs 91.933 µs 92.070 µs]
+                        change: [+32.178% +32.762% +33.399%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 16 outliers among 100 measurements (16.00%)
+  10 (10.00%) high mild
+  6 (6.00%) high severe
+rdag20250730::fxhash_worker::FxHashWorker/total_delta
+                        time:   [9.3933 µs 9.4141 µs 9.4397 µs]
+                        change: [−1.6704% −0.6003% +1.0651%] (p = 0.56 > 0.05)
+                        No change in performance detected.
+Found 7 outliers among 100 measurements (7.00%)
+  2 (2.00%) high mild
+  5 (5.00%) high severe
+rdag20250730::fxhash_worker::FxHashWorker/total_greeks
+                        time:   [8.7999 µs 8.8133 µs 8.8286 µs]
+                        change: [−0.4775% +0.5119% +1.7882%] (p = 0.51 > 0.05)
+                        No change in performance detected.
+Found 8 outliers among 100 measurements (8.00%)
+  2 (2.00%) high mild
+  6 (6.00%) high severe
+
+rdag20250730::nohash_worker::NoHashWorker/insert
+                        time:   [83.471 µs 83.569 µs 83.689 µs]
+                        change: [+36.936% +39.211% +41.328%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 14 outliers among 100 measurements (14.00%)
+  5 (5.00%) high mild
+  9 (9.00%) high severe
+rdag20250730::nohash_worker::NoHashWorker/update
+                        time:   [83.526 µs 83.584 µs 83.653 µs]
+                        change: [+39.811% +40.544% +41.400%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 15 outliers among 100 measurements (15.00%)
+  5 (5.00%) high mild
+  10 (10.00%) high severe
+rdag20250730::nohash_worker::NoHashWorker/total_delta
+                        time:   [8.7655 µs 8.7744 µs 8.7852 µs]
+                        change: [−0.5927% +0.0170% +0.6608%] (p = 0.96 > 0.05)
+                        No change in performance detected.
+Found 17 outliers among 100 measurements (17.00%)
+  10 (10.00%) high mild
+  7 (7.00%) high severe
+rdag20250730::nohash_worker::NoHashWorker/total_greeks
+                        time:   [8.7615 µs 8.7699 µs 8.7805 µs]
+                        change: [−0.6198% +0.0030% +0.6021%] (p = 0.99 > 0.05)
+                        No change in performance detected.
+Found 15 outliers among 100 measurements (15.00%)
+  9 (9.00%) high mild
+  6 (6.00%) high severe
+
+rdag20250730::soa_worker::SoaWorker/insert
+                        time:   [80.704 µs 80.801 µs 80.907 µs]
+                        change: [−1.7408% −0.9561% −0.1873%] (p = 0.01 < 0.05)
+                        Change within noise threshold.
+Found 13 outliers among 100 measurements (13.00%)
+  6 (6.00%) high mild
+  7 (7.00%) high severe
+rdag20250730::soa_worker::SoaWorker/update
+                        time:   [101.73 µs 101.91 µs 102.11 µs]
+                        change: [−5.0463% −4.5403% −4.0323%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 9 outliers among 100 measurements (9.00%)
+  4 (4.00%) high mild
+  5 (5.00%) high severe
+rdag20250730::soa_worker::SoaWorker/total_delta
+                        time:   [8.7066 µs 8.7149 µs 8.7250 µs]
+                        change: [−0.6787% −0.0535% +0.5109%] (p = 0.87 > 0.05)
+                        No change in performance detected.
+Found 15 outliers among 100 measurements (15.00%)
+  1 (1.00%) high mild
+  14 (14.00%) high severe
+rdag20250730::soa_worker::SoaWorker/total_greeks
+                        time:   [34.846 µs 34.876 µs 34.911 µs]
+                        change: [−0.5362% +0.0361% +0.6335%] (p = 0.91 > 0.05)
+                        No change in performance detected.
+Found 15 outliers among 100 measurements (15.00%)
+  3 (3.00%) high mild
+  12 (12.00%) high severe
+
+rdag20250730::aos_worker::AosWorker/insert
+                        time:   [117.76 µs 117.86 µs 117.97 µs]
+                        change: [+78.231% +79.441% +80.577%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 15 outliers among 100 measurements (15.00%)
+  10 (10.00%) high mild
+  5 (5.00%) high severe
+rdag20250730::aos_worker::AosWorker/update
+                        time:   [126.88 µs 127.00 µs 127.14 µs]
+                        change: [+65.129% +66.296% +68.016%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 12 outliers among 100 measurements (12.00%)
+  6 (6.00%) high mild
+  6 (6.00%) high severe
+rdag20250730::aos_worker::AosWorker/total_delta
+                        time:   [8.7140 µs 8.7243 µs 8.7376 µs]
+                        change: [−0.6692% −0.0157% +0.6246%] (p = 0.97 > 0.05)
+                        No change in performance detected.
+Found 9 outliers among 100 measurements (9.00%)
+  4 (4.00%) high mild
+  5 (5.00%) high severe
+rdag20250730::aos_worker::AosWorker/total_greeks
+                        time:   [8.7130 µs 8.7181 µs 8.7245 µs]
+                        change: [−0.3034% +0.2406% +0.8612%] (p = 0.40 > 0.05)
+                        No change in performance detected.
+Found 15 outliers among 100 measurements (15.00%)
+  8 (8.00%) high mild
+  7 (7.00%) high severe
+
+rdag20250730::int_worker::IntWorker/insert
+                        time:   [99.305 µs 99.490 µs 99.707 µs]
+                        change: [−2.5894% −1.4173% +0.3979%] (p = 0.05 < 0.05)
+                        Change within noise threshold.
+Found 6 outliers among 100 measurements (6.00%)
+  2 (2.00%) high mild
+  4 (4.00%) high severe
+rdag20250730::int_worker::IntWorker/update
+                        time:   [120.10 µs 120.20 µs 120.33 µs]
+                        change: [−1.0995% −0.5724% −0.0414%] (p = 0.03 < 0.05)
+                        Change within noise threshold.
+Found 14 outliers among 100 measurements (14.00%)
+  9 (9.00%) high mild
+  5 (5.00%) high severe
+rdag20250730::int_worker::IntWorker/total_delta
+                        time:   [302.27 ns 303.73 ns 305.21 ns]
+                        change: [+0.3715% +1.2250% +2.0443%] (p = 0.01 < 0.05)
+                        Change within noise threshold.
+Found 4 outliers among 100 measurements (4.00%)
+  3 (3.00%) high mild
+  1 (1.00%) high severe
+rdag20250730::int_worker::IntWorker/total_greeks
+                        time:   [1.8111 µs 1.8133 µs 1.8156 µs]
+                        change: [+43.507% +46.244% +47.957%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 9 outliers among 100 measurements (9.00%)
+  2 (2.00%) high mild
+  7 (7.00%) high severe
+
+rdag20250730::fast_worker::FastWorker/insert
+                        time:   [80.174 µs 80.326 µs 80.500 µs]
+                        change: [−2.6162% −1.8638% −1.1181%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 13 outliers among 100 measurements (13.00%)
+  6 (6.00%) high mild
+  7 (7.00%) high severe
+rdag20250730::fast_worker::FastWorker/update
+                        time:   [103.86 µs 103.99 µs 104.12 µs]
+                        change: [−4.1151% −3.5640% −2.9694%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 7 outliers among 100 measurements (7.00%)
+  3 (3.00%) high mild
+  4 (4.00%) high severe
+rdag20250730::fast_worker::FastWorker/total_delta
+                        time:   [434.30 ns 437.13 ns 440.08 ns]
+                        change: [+4.5051% +5.3794% +6.2212%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 11 outliers among 100 measurements (11.00%)
+  5 (5.00%) high mild
+  6 (6.00%) high severe
+rdag20250730::fast_worker::FastWorker/total_greeks
+                        time:   [1.9289 µs 1.9330 µs 1.9381 µs]
+                        change: [+11.166% +11.830% +12.540%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 5 outliers among 100 measurements (5.00%)
+  2 (2.00%) high mild
+  3 (3.00%) high severe
+
+rdag20250730::hotpath_worker::HotPathWorker/insert
+                        time:   [3.8700 ms 3.8743 ms 3.8794 ms]
+                        change: [−0.8731% −0.6628% −0.4726%] (p = 0.00 < 0.05)
+                        Change within noise threshold.
+Found 12 outliers among 100 measurements (12.00%)
+  6 (6.00%) high mild
+  6 (6.00%) high severe
+rdag20250730::hotpath_worker::HotPathWorker/update
+                        time:   [4.0258 ms 4.0408 ms 4.0577 ms]
+                        change: [+0.2127% +0.6427% +1.1480%] (p = 0.01 < 0.05)
+                        Change within noise threshold.
+Found 6 outliers among 100 measurements (6.00%)
+  5 (5.00%) high mild
+  1 (1.00%) high severe
+rdag20250730::hotpath_worker::HotPathWorker/total_delta
+                        time:   [218.84 ps 219.16 ps 219.60 ps]
+                        change: [−0.6283% −0.0200% +0.5537%] (p = 0.95 > 0.05)
+                        No change in performance detected.
+Found 9 outliers among 100 measurements (9.00%)
+  5 (5.00%) high mild
+  4 (4.00%) high severe
+rdag20250730::hotpath_worker::HotPathWorker/total_greeks
+                        time:   [1.3651 µs 1.3689 µs 1.3732 µs]
+                        change: [+3.5217% +4.7963% +5.9908%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 9 outliers among 100 measurements (9.00%)
+  3 (3.00%) high mild
+  6 (6.00%) high severe

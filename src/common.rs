@@ -3,6 +3,8 @@ use derive_more::{Add, AddAssign, Sum};
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Id(pub u32);
 
+impl nohash_hasher::IsEnabled for Id {}
+
 #[derive(Clone, Copy, PartialEq, Add, AddAssign, Sum)]
 pub struct Delta(pub f32);
 

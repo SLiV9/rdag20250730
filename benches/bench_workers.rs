@@ -11,6 +11,7 @@ use rdag20250730::hashmap_worker::HashMapWorker;
 use rdag20250730::hotpath_worker::HotPathWorker;
 use rdag20250730::int_worker::IntWorker;
 use rdag20250730::naive_worker::NaiveWorker;
+use rdag20250730::nohash_worker::NoHashWorker;
 use rdag20250730::soa_worker::SoaWorker;
 
 fn bench_worker(
@@ -74,6 +75,10 @@ fn bench_fxhash_worker(c: &mut Criterion) {
     bench_worker(c, FxHashWorker::default())
 }
 
+fn bench_nohash_worker(c: &mut Criterion) {
+    bench_worker(c, NoHashWorker::default())
+}
+
 fn bench_soa_worker(c: &mut Criterion) {
     bench_worker(c, SoaWorker::default())
 }
@@ -99,6 +104,7 @@ criterion_group!(
     bench_naive_worker,
     bench_hashmap_worker,
     bench_fxhash_worker,
+    bench_nohash_worker,
     bench_soa_worker,
     bench_aos_worker,
     bench_int_worker,
