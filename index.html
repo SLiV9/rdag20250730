@@ -9,8 +9,6 @@
 		<link rel="stylesheet" href="dist/reset.css">
 		<link rel="stylesheet" href="dist/reveal.css">
 		<link rel="stylesheet" href="bt-theme.css">
-
-		<!-- Theme used for syntax highlighted code -->
 		<link rel="stylesheet" href="bt-highlight.css">
 	</head>
 	<body>
@@ -25,65 +23,27 @@
 				</section>
 
 
-				<section>
-<!-- When I joined, I was unsure how much Rust I'd really be writing. -->
-<img src="graph_languages.png"></img>
-				</section>
-
-
-				<section>
-<pre><code data-line-numbers class="language-sql">
-<script type="text/template">SELECT t.transaction_time,
-	t.price,
-	t.size,
-	o.component_id,
-	o.order_id
-FROM risk.private_trades t
-LEFT JOIN execution.orders o
-  ON t.transaction_time = o.transaction_time
-</script></code></pre>
-<pre><code data-line-numbers class="language-python">
-<script type="text/template">class PrivateTrade:
-	price: float
-	size: float
-	transaction_time: datetime
-</script></code></pre>
-<pre><code data-line-numbers class="language-rust">
-<script type="text/template">struct Order {
-	component_id: u64,
-	order_id: u64,
-	transaction_time: SystemTime,
-}
-</script></code></pre>
-				</section>
-
-
 				<section data-markdown>
 					<textarea data-template>
-						### </span>
-						- Fun
-						- Challenging
-						- Fast
-						- Safe
-						- Ambitious
-						- Focus on what matters
-						- Work with amazing tools
-						- Smart people from different fields
+						#### High Frequency Trading
+						- Mathematicians build economical models
+						- Engineers build low latency systems
+						- Traders monitor and steer the system
 					</textarea>
 				</section>
 
 
 				<section data-markdown>
 					<textarea data-template>
-						### Why I enjoy working in HFT</span>
-						- Fun
-						- Challenging
-						- Fast
-						- Safe
-						- Ambitious
-						- Focus on what matters
-						- Work with amazing tools
-						- Smart people from different fields
+						### Languages used <span class="mark">in HFT</span>
+						- Python
+						- Numba
+						- Java
+						- OCAML
+						- C
+						- C++
+						- Rust
+						- Hardware DSLs (FPGA)
 					</textarea>
 				</section>
 
@@ -97,7 +57,7 @@ LEFT JOIN execution.orders o
 						- Safe
 						- Ambitious
 						- Focus on what matters
-						- Work with amazing tools
+						- Great tooling
 						- Smart people from different fields
 					</textarea>
 				</section>
@@ -113,7 +73,7 @@ LEFT JOIN execution.orders o
 							- 10 ms every second means 1% already lost
 							- 20 us is a lot if you do it 1000x in a row
 							- 1 us for a thread context switch
-							- 100ns is too slow to compete with FPGAs
+							- 100ns is too slow to compete with hardware
 					</textarea>
 				</section>
 
@@ -126,6 +86,7 @@ LEFT JOIN execution.orders o
 							- No buffer overflows*
 							- No uninitialized data*
 							- No memory leaks
+						- Ambitious
 						- Focus on what matters
 					</textarea>
 				</section>
@@ -134,7 +95,7 @@ LEFT JOIN execution.orders o
 				<section data-markdown>
 					<textarea data-template>
 						### Why Rust is great <span class="mark">in HFT</span>
-						- Work with amazing tools
+						- Great tooling
 							- Cargo.toml
 							- serde
 							- cargo fmt
@@ -151,7 +112,6 @@ LEFT JOIN execution.orders o
 							- Mathematicians
 							- Data analysts
 							- Economists
-							- Nerds
 
 Α α, Β β, <span class="mark">Γ</span> γ, <span class="mark">Δ</span> δ, Ε <span class="mark">ε</span>, Ζ ζ, Η η, <span class="mark">Θ</span> θ, Ι ι,
 
@@ -182,6 +142,9 @@ LEFT JOIN execution.orders o
 
 
 				<section>
+
+					<!-- TODO say something about expose -->
+
 <pre><code data-line-numbers class="language-rust">
 <script type="text/template">impl Worker {
     pub fn update(&mut self, id: Id,
@@ -1004,6 +967,9 @@ HotPathWorker/total_greeks
 				</section>
 
 
+					<!-- TODO think of something to say at the end -->
+
+
 				<section data-markdown>
 					<textarea data-template>
 						### Why <span class="mark">Rust in HFT</span> is great
@@ -1013,7 +979,7 @@ HotPathWorker/total_greeks
 						- Safe
 						- Ambitious
 						- Focus on what matters
-						- Work with amazing tools
+						- Great tooling
 						- Smart people from different fields
 					</textarea>
 				</section>
