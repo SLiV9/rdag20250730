@@ -26,8 +26,8 @@
 				<section data-markdown>
 					<textarea data-template>
 						#### High Frequency Trading
-						- Quants develop economical models
-						- <span class="mark">Engineers</span> build and maintain low latency components that trade 24/7
+						- Quants develop economic models
+						- <span>Engineers</span> build and maintain <span class="mark">low latency</span> components that trade 24/7
 						- Traders monitor and make macro decisions
 					</textarea>
 				</section>
@@ -36,13 +36,10 @@
 				<section data-markdown>
 					<textarea data-template>
 						#### Languages used in HFT
-						- <span class="mark">Python</span>
-						- <span class="mark">Numba</span>
-						- Java
-						- OCAML
-						- C
-						- C++
-						- <span class="mark">Rust</span>
+						- Python (Numba)
+						- Java, OCaml
+						- C<span class="cpp">++</span>
+						- <span>Rust</span>
 						- Hardware DSLs
 					</textarea>
 				</section>
@@ -51,27 +48,10 @@
 				<section data-markdown>
 					<textarea data-template>
 						### Why Rust is great <span class="mark">in HFT</span>
-						- Fun
-						- Challenging
 						- Fast
-						- Safe
-						- Ambitious
-						- Focus on what matters
-						- Great tooling
-						- Smart people from different fields
-					</textarea>
-				</section>
-
-
-				<section data-markdown>
-					<textarea data-template>
-						### Why Rust is great <span class="mark">in HFT</span>
-						- Fast
-							- 1 second is a very busy exchange
-							- 250 ms is the average human reaction speed
+							- 1 second is a busy exchange
+							- 250 ms is human reaction speed
 							- 65 ms for light to cross the globe
-							- 10 ms every second means 1% already lost
-							- 20 us is a lot if you do it 1000x in a row
 							- 1 us for a thread context switch
 							- 100ns is too slow to compete with hardware
 					</textarea>
@@ -82,10 +62,11 @@
 					<textarea data-template>
 						### Why Rust is great <span class="mark">in HFT</span>
 						- Safe
-							- No segfaults
+							- No segfaults, ever
 							- No buffer overflows*
 							- No uninitialized data*
 							- No memory leaks
+							- No implicit type conversion
 					</textarea>
 				</section>
 
@@ -94,8 +75,8 @@
 					<textarea data-template>
 						### Why Rust is great <span class="mark">in HFT</span>
 						- Great tooling
-							- Cargo.toml
-							- serde
+							- rustc
+							- crates.io
 							- cargo fmt
 							- cargo clippy
 							- cargo asm
@@ -105,33 +86,7 @@
 
 				<section data-markdown>
 					<textarea data-template>
-						### Why <span class="mark">Rust in HFT</span> is great
-						- Smart people from different fields
-							- Mathematicians
-							- Data analysts
-							- Economists
-
-Α α, Β β, <span class="mark">Γ</span> γ, <span class="mark">Δ</span> δ, Ε <span class="mark">ε</span>, Ζ ζ, Η η, <span class="mark">Θ</span> θ, Ι ι,
-
-Κ κ, Λ <span class="mark">λ</span>, Μ <span class="mark">μ</span>, Ν ν, Ξ ξ, Ο ο, Π <span class="mark">π</span>, <span class="mark">Ρ</span> ρ,
-
-Σ <span class="mark">σ</span> ς, Τ τ, Υ υ, Φ φ, Χ χ, Ψ ψ, Ω ω, <span class="mark">Ⅎ?</span>
-					</textarea>
-				</section>
-
-
-				<section data-markdown>
-					<textarea data-template>
-						### Why <span class="mark">Rust in HFT</span> is great
-						- Fun
-						- Challenging
-					</textarea>
-				</section>
-
-
-				<section data-markdown>
-					<textarea data-template>
-						### Why <span class="mark">Rust in HFT</span> is great
+						### Why Rust is great <span class="mark">in HFT</span>
 						- Fast
 						- Safe
 						- Ambitious
@@ -139,10 +94,63 @@
 				</section>
 
 
+				<section data-markdown>
+					<textarea data-template>
+						#### Greeks
+
+
+
+Α α, Β β, Γ γ, Δ δ, Ε ε, Ζ ζ, Η η, Θ θ, Ι ι,
+
+Κ κ, Λ λ, Μ μ, Ν ν, Ξ ξ, Ο ο, Π π, Ρ ρ,
+
+Σ σ ς, Τ τ, Υ υ, Φ φ, Χ χ, Ψ ψ, Ω ω
+					</textarea>
+				</section>
+
+
+				<section data-markdown>
+					<textarea data-template>
+						#### Greeks
+
+						Mathematicians, statisticians, programmers
+
+Α α, Β β, Γ γ, Δ δ, Ε <span class="mark">ε</span>, Ζ ζ, Η η, Θ θ, Ι ι,
+
+Κ κ, Λ <span class="mark">λ</span>, Μ <span class="mark">μ</span>, Ν ν, Ξ ξ, Ο ο, Π <span class="mark">π</span>, Ρ ρ,
+
+<span class="mark">Σ</span> <span class="mark">σ</span> ς, Τ τ, Υ υ, Φ φ, Χ χ, Ψ ψ, Ω ω
+					</textarea>
+				</section>
+
+
+				<section data-markdown>
+					<textarea data-template>
+						#### Greeks
+
+						Economists: Delta, Gamma, Theta, Rho, "Vega"
+
+Α α, Β β, <span class="mark">Γ</span> γ, <span class="mark">Δ</span> δ, Ε ε, Ζ ζ, Η η, <span class="mark">Θ</span> θ, Ι ι,
+
+Κ κ, Λ λ, Μ μ, Ν ν, Ξ ξ, Ο ο, Π π, <span class="mark">Ρ</span> ρ,
+
+Σ σ ς, Τ τ, Υ υ, Φ φ, Χ χ, Ψ ψ, Ω ω, <span class="mark">Ⅎ?</span>
+					</textarea>
+				</section>
+
+
+				<section data-markdown>
+					<textarea data-template>
+						#### Exposure
+
+						- Greeks express your risk in certain scenarios
+						- Changes each time you buy or sell something
+						- Matters when trading thousands of instruments
+
+					</textarea>
+				</section>
+
 				<section>
-
-					<!-- TODO say something about expose -->
-
 <pre><code data-line-numbers class="language-rust">
 <script type="text/template">impl Worker {
     pub fn update(&mut self, id: Id,
@@ -208,55 +216,6 @@ pub struct Greeks {
         theta: 0.0,
     };
     worker.update(id, greeks);
-</script></code></pre>
-				</section>
-
-
-				<section>
-<pre><code data-line-numbers class="language-rust">
-<script type="text/template">#[derive(Clone, Copy)]
-pub struct Greeks {
-    pub delta: f32,
-    pub gamma: f32,
-    pub theta: f32,
-    pub vega: f32,
-}
-</script></code></pre>
-<pre><code data-line-numbers class="language-rust">
-<script type="text/template">impl Worker {
-    pub fn update(&mut self, id: Id, greeks: Greeks);
-
-    pub fn total_delta(&self) -> f32;
-    pub fn total_gamma(&self) -> f32;
-    pub fn total_theta(&self) -> f32;
-    pub fn total_vega(&self) -> f32;
-}
-</script></code></pre>
-				</section>
-
-
-				<section>
-<pre><code data-line-numbers class="language-rust">
-<script type="text/template">pub fn update(&mut self, id: Id, 
-        delta: f32, gamma: f32,
-        theta: f32, vega: f32) {
-    // ...
-    entry.greeks = Greeks { delta, gamma, theta, vega };
-</script></code></pre>
-<pre><code data-line-numbers class="language-x86asm">
-<script type="text/template">	vmovss dword ptr [rax + r8 - 20], xmm0
-	vmovss dword ptr [rax + r8 - 16], xmm1
-	vmovss dword ptr [rax + r8 - 12], xmm2
-	vmovss dword ptr [rax + r8 - 8], xmm3
-</script></code></pre>
-<pre><code data-line-numbers class="language-rust">
-<script type="text/template">pub fn update(&mut self, id: Id, greeks: Greeks) {
-    // ...
-    entry.greeks = greeks;
-</script></code></pre>
-<pre><code data-line-numbers class="language-x86asm">
-<script type="text/template">	vmovups xmm0, xmmword ptr [rdx]
-	vmovups xmmword ptr [rax + r9 - 20], xmm0
 </script></code></pre>
 				</section>
 
@@ -671,6 +630,17 @@ impl Worker for SoaWorker {
 
 
 				<section>
+<img src="total_deltas_desired.png"></img>
+
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">    fn total_delta(&self) -> Delta {
+        self.deltas.iter().copied().sum()
+    }
+</script></code></pre>
+				</section>
+
+
+				<section>
 <pre><code data-line-numbers class="language-x86asm">
 <script type="text/template">AosWorker/insert
                     time:   [65.438 µs 65.521 µs 65.609 µs]
@@ -742,6 +712,26 @@ SoaWorker/total_greeks
 
 
 				<section>
+<img src="total_deltas_soa_reality.png"></img>
+
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">.LBB57_5:
+	vaddss xmm0, xmm0, dword ptr [rcx + 4*rsi]
+	vaddss xmm0, xmm0, dword ptr [rcx + 4*rsi + 4]
+	vaddss xmm0, xmm0, dword ptr [rcx + 4*rsi + 8]
+	vaddss xmm0, xmm0, dword ptr [rcx + 4*rsi + 12]
+	vaddss xmm0, xmm0, dword ptr [rcx + 4*rsi + 16]
+	vaddss xmm0, xmm0, dword ptr [rcx + 4*rsi + 20]
+	vaddss xmm0, xmm0, dword ptr [rcx + 4*rsi + 24]
+	vaddss xmm0, xmm0, dword ptr [rcx + 4*rsi + 28]
+	add rsi, 8
+	cmp rdx, rsi
+	jne .LBB57_5
+</script></code></pre>
+				</section>
+
+
+				<section>
 <pre><code data-line-numbers class="language-rust">
 <script type="text/template">#[derive(Default)]
 pub struct IntWorker {
@@ -793,6 +783,31 @@ fn greek_from_int(value: i32) -> f32 {
         Delta(greek_from_int(sum))
     }
 </script></code></pre>
+
+<img src="total_deltas_desired.png"></img>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">    fn total_delta(&self) -> Delta {
+        let sum: i32 = self.deltas.iter().copied().sum();
+        Delta(greek_from_int(sum))
+    }
+</script></code></pre>
+
+<img src="total_deltas_ymm.png"></img>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">    fn total_delta(&self) -> Delta {
+        let sum: i32 = self.deltas.iter().copied().sum();
+        Delta(greek_from_int(sum))
+    }
+</script></code></pre>
+
 <pre><code data-line-numbers class="language-x86asm">
 <script type="text/template">.LBB43_8:
 	vpaddd ymm0, ymm0, ymmword ptr [rcx + 4*rsi]
@@ -803,6 +818,8 @@ fn greek_from_int(value: i32) -> f32 {
 	cmp rdx, rsi
 	jne .LBB43_8
 </script></code></pre>
+
+<img src="total_deltas_ymm3.png"></img>
 				</section>
 
 
@@ -830,19 +847,26 @@ IntWorker/total_greeks
 				</section>
 
 
+				<section data-markdown>
+					<textarea data-template>
+						#### Back of the envelope math
+						- Sum of 10,000 deltas
+						- Multiplied by 1,000,000
+						- Stored as i32
+					</textarea>
+				</section>
+
+
 				<section>
 <pre><code data-line-numbers class="language-rust">
-<script type="text/template">#[inline]
-pub fn fast_sum(mut values: &[f32]) -> f32
-{
-    const CHUNK_SIZE: usize = 128;
-    let mut sums = [0.0; CHUNK_SIZE];
+<script type="text/template">pub fn fast_sum(mut values: &[f32]) -> f32 {
+    let mut sums = [0.0; 128];
     while let Some(chunk) = values.first_chunk() {
-        let chunk: &[f32; CHUNK_SIZE] = chunk;
-        for i in 0..CHUNK_SIZE {
+        let chunk: &[f32; 128] = chunk;
+        for i in 0..128 {
             sums[i] += chunk[i];
         }
-        values = &values[CHUNK_SIZE..];
+        values = &values[128..];
     }
     for (i, v) in values.iter().enumerate() {
         sums[i] += *v;
@@ -868,6 +892,32 @@ pub fn fast_sum(mut values: &[f32]) -> f32
 	add rax, 512
 	cmp rcx, 127
 	ja .LBB40_2
+</script></code></pre>
+
+<img src="total_deltas_fast.png"></img>
+				</section>
+
+
+				<section>
+<pre><code data-line-numbers class="language-rust">
+<script type="text/template">#[inline]
+pub fn fast_sum<T>(zero_value: T, mut values: &[T]) -> T
+where T: Copy + Add<Output = T> + AddAssign + Sum,
+{
+    const CHUNK_SIZE: usize = 128;
+    let mut sums = [zero_value; CHUNK_SIZE];
+    while let Some(chunk) = values.first_chunk() {
+        let chunk: &[T; CHUNK_SIZE] = chunk;
+        for i in 0..CHUNK_SIZE {
+            sums[i] += chunk[i];
+        }
+        values = &values[CHUNK_SIZE..];
+    }
+    for (i, v) in values.iter().enumerate() {
+        sums[i] += *v;
+    }
+    sums.iter().copied().sum()
+}
 </script></code></pre>
 				</section>
 
@@ -918,27 +968,16 @@ FastWorker/total_greeks
 				</section>
 
 
-				<section>
-<pre><code data-line-numbers class="language-x86asm">
-<script type="text/template">FastWorker/insert
-                    time:   [82.068 µs 82.509 µs 82.942 µs]
-FastWorker/update
-                    time:   [107.62 µs 107.75 µs 107.88 µs]
-FastWorker/total_delta
-                    time:   [409.68 ns 410.82 ns 412.00 ns]
-FastWorker/total_greeks
-                    time:   [1.7260 µs 1.7305 µs 1.7363 µs]
-</script></code></pre>
-<pre><code data-line-numbers class="language-x86asm">
-<script type="text/template">HotPathWorker/insert
-                    time:   [3.8947 ms 3.9002 ms 3.9071 ms]
-HotPathWorker/update
-                    time:   [4.0070 ms 4.0150 ms 4.0249 ms]
-HotPathWorker/total_delta
-                    time:   [219.07 ps 219.31 ps 219.58 ps]
-HotPathWorker/total_greeks
-                    time:   [1.2767 µs 1.2787 µs 1.2811 µs]
-</script></code></pre>
+				<section data-markdown>
+					<textarea data-template>
+						### Why Rust is great <span class="mark">in HFT</span>
+						- Fun
+						- Great tooling
+						- Focus on what matters
+						- Fast
+						- Safe
+						- Ambitious
+					</textarea>
 				</section>
 
 
@@ -965,22 +1004,30 @@ HotPathWorker/total_greeks
 				</section>
 
 
-					<!-- TODO think of something to say at the end -->
-
-
-				<section data-markdown>
-					<textarea data-template>
-						### Why <span class="mark">Rust in HFT</span> is great
-						- Fun
-						- Challenging
-						- Fast
-						- Safe
-						- Ambitious
-						- Focus on what matters
-						- Great tooling
-						- Smart people from different fields
-					</textarea>
+				<section>
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">FastWorker/insert
+                    time:   [82.068 µs 82.509 µs 82.942 µs]
+FastWorker/update
+                    time:   [107.62 µs 107.75 µs 107.88 µs]
+FastWorker/total_delta
+                    time:   [409.68 ns 410.82 ns 412.00 ns]
+FastWorker/total_greeks
+                    time:   [1.7260 µs 1.7305 µs 1.7363 µs]
+</script></code></pre>
+<pre><code data-line-numbers class="language-x86asm">
+<script type="text/template">HotPathWorker/insert
+                    time:   [3.8947 ms 3.9002 ms 3.9071 ms]
+HotPathWorker/update
+                    time:   [4.0070 ms 4.0150 ms 4.0249 ms]
+HotPathWorker/total_delta
+                    time:   [219.07 ps 219.31 ps 219.58 ps]
+HotPathWorker/total_greeks
+                    time:   [1.2767 µs 1.2787 µs 1.2811 µs]
+</script></code></pre>
 				</section>
+
+
 			</div>
 		</div>
 
