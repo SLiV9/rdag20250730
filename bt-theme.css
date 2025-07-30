@@ -29,11 +29,6 @@ section.has-light-background, section.has-light-background h1, section.has-light
   color: #ffcc5a;
 }
 
-.cpp {
-  position:relative;
-  top:-6px;
-}
-
 .reveal .fragment.highlight-red.visible {
   color: #cc85ff;
 }
